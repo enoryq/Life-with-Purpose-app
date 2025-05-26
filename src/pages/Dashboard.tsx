@@ -9,6 +9,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import UserStatsWidget from '../components/dashboard/UserStatsWidget';
 import VisionBoardWidget from '../components/dashboard/VisionBoardWidget';
 import RecentGoalsWidget from '../components/dashboard/RecentGoalsWidget';
+import RecommendationsWidget from '../components/dashboard/RecommendationsWidget';
+import ProgressInsightsWidget from '../components/dashboard/ProgressInsightsWidget';
+import ActivityTimelineWidget from '../components/dashboard/ActivityTimelineWidget';
 import { 
   User, 
   BookOpen, 
@@ -20,7 +23,8 @@ import {
   Download,
   MessageCircle,
   TrendingUp,
-  Wrench
+  Wrench,
+  Sunrise
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -37,27 +41,6 @@ const Dashboard = () => {
       progress: 30,
       nextLesson: "Module 2: Self-Awareness Practices",
       timeRemaining: "6 weeks left"
-    }
-  ];
-
-  const recentActivities = [
-    {
-      type: "lesson",
-      title: "Completed: Finding Your Why Exercise",
-      time: "2 hours ago",
-      program: "Purpose Discovery"
-    },
-    {
-      type: "community",
-      title: "Posted in Leadership Discussion",
-      time: "1 day ago",
-      program: "Community"
-    },
-    {
-      type: "resource",
-      title: "Downloaded: Values Assessment Tool",
-      time: "2 days ago",
-      program: "Resources"
     }
   ];
 
@@ -81,11 +64,18 @@ const Dashboard = () => {
     }
   ];
 
+  const currentHour = new Date().getHours();
+  const getGreeting = () => {
+    if (currentHour < 12) return "Good morning";
+    if (currentHour < 17) return "Good afternoon";
+    return "Good evening";
+  };
+
   return (
     <Layout showFooter={false}>
       <div className="pt-8 pb-16 px-4">
         <div className="max-w-7xl mx-auto">
-          {/* Welcome Section */}
+          {/* Enhanced Welcome Section */}
           <div className="mb-8">
             <div className="flex items-center gap-4 mb-6">
               <Avatar className="w-16 h-16">
@@ -93,8 +83,11 @@ const Dashboard = () => {
                 <AvatarFallback>JD</AvatarFallback>
               </Avatar>
               <div>
-                <h1 className="text-3xl font-bold text-gray-800">Welcome back, John!</h1>
-                <p className="text-gray-600">Continue your journey toward a more purposeful life</p>
+                <div className="flex items-center gap-2 mb-1">
+                  <Sunrise className="w-5 h-5 text-yellow-500" />
+                  <h1 className="text-3xl font-bold text-gray-800">{getGreeting()}, John!</h1>
+                </div>
+                <p className="text-gray-600">Ready to continue your purposeful journey today?</p>
               </div>
             </div>
             
@@ -105,6 +98,9 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-8">
+              {/* Personalized Recommendations */}
+              <RecommendationsWidget />
+
               {/* Interactive Tools Quick Access */}
               <div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-6">Interactive Tools</h2>
@@ -165,33 +161,15 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Recent Activity */}
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">Recent Activity</h2>
-                <Card className="border-0 shadow-lg">
-                  <CardContent className="p-0">
-                    <div className="divide-y">
-                      {recentActivities.map((activity, index) => (
-                        <div key={index} className="p-4 flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
-                            {activity.type === 'lesson' && <BookOpen className="w-5 h-5 text-purple-600" />}
-                            {activity.type === 'community' && <MessageCircle className="w-5 h-5 text-purple-600" />}
-                            {activity.type === 'resource' && <Download className="w-5 h-5 text-purple-600" />}
-                          </div>
-                          <div className="flex-1">
-                            <div className="font-medium text-gray-800">{activity.title}</div>
-                            <div className="text-sm text-gray-600">{activity.program} • {activity.time}</div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+              {/* Activity Timeline */}
+              <ActivityTimelineWidget />
             </div>
 
-            {/* Sidebar */}
+            {/* Enhanced Sidebar */}
             <div className="space-y-8">
+              {/* Progress Insights */}
+              <ProgressInsightsWidget />
+
               {/* Vision Board Widget */}
               <VisionBoardWidget />
 
