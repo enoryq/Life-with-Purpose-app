@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,11 +7,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Clock, Star, Users, CheckCircle, Target, BookOpen, MessageCircle, Calendar, ArrowRight, Play } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useCourseEnrollment } from '@/hooks/useCourseEnrollment';
+import { useLessonProgress } from '@/hooks/useLessonProgress';
 import { Link } from 'react-router-dom';
+import LessonCard from '@/components/LessonCard';
+import ProgressSummary from '@/components/ProgressSummary';
+
+const COURSE_ID = 'purpose-discovery-30-day';
 
 const PurposeDiscovery = () => {
   const { user } = useAuth();
-  const [enrolledWeeks, setEnrolledWeeks] = useState<number[]>([]);
+  const { enrollment, isLoading: enrollmentLoading, isEnrolled, enrollInCourse } = useCourseEnrollment(COURSE_ID);
+  const { progress, isLoading: progressLoading, updateLessonStatus, getLessonStatus } = useLessonProgress(COURSE_ID);
 
   const programOverview = {
     title: "30-Day Purpose Discovery",
@@ -120,10 +126,26 @@ const PurposeDiscovery = () => {
     }
   ];
 
-  const handleEnrollWeek = (week: number) => {
-    if (!enrolledWeeks.includes(week)) {
-      setEnrolledWeeks([...enrolledWeeks, week]);
-    }
+  // Calculate progress statistics
+  const totalLessons = 30;
+  const completedLessons = progress.filter(p => p.status === 'completed').length;
+  const inProgressLessons = progress.filter(p => p.status === 'in_progress').length;
+  
+  // Find current lesson (first incomplete lesson)
+  const currentLesson = progress.find(p => p.status === 'in_progress') || 
+    weeklyModules.flatMap(week => 
+      week.days.map(day => ({ week: week.week, day: day.day }))
+    ).find(lesson => getLessonStatus(lesson.week, lesson.day) === 'not_started');
+  
+  const currentWeek = currentLesson?.week || 1;
+  const currentDay = currentLesson?.day || 1;
+
+  const handleStartLesson = (weekNumber: number, dayNumber: number) => {
+    updateLessonStatus(weekNumber, dayNumber, 'in_progress');
+  };
+
+  const handleCompleteLesson = (weekNumber: number, dayNumber: number) => {
+    updateLessonStatus(weekNumber, dayNumber, 'completed');
   };
 
   return (
@@ -158,10 +180,24 @@ const PurposeDiscovery = () => {
             </div>
 
             {user ? (
-              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-lg px-8 py-4">
-                <Play className="mr-2 w-5 h-5" />
-                Start Your Journey
-              </Button>
+              <>
+                {!isEnrolled && !enrollmentLoading && (
+                  <Button 
+                    size="lg" 
+                    className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-lg px-8 py-4"
+                    onClick={enrollInCourse}
+                  >
+                    <Play className="mr-2 w-5 h-5" />
+                    Start Your Journey
+                  </Button>
+                )}
+                {isEnrolled && (
+                  <Badge className="bg-green-100 text-green-800 text-lg px-6 py-3">
+                    <CheckCircle className="mr-2 w-5 h-5" />
+                    Enrolled
+                  </Badge>
+                )}
+              </>
             ) : (
               <Link to="/auth">
                 <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-lg px-8 py-4">
@@ -172,8 +208,21 @@ const PurposeDiscovery = () => {
             )}
           </div>
 
+          {/* Progress Summary - Only show if enrolled */}
+          {isEnrolled && !progressLoading && (
+            <div className="mb-8">
+              <ProgressSummary
+                totalLessons={totalLessons}
+                completedLessons={completedLessons}
+                inProgressLessons={inProgressLessons}
+                currentWeek={currentWeek}
+                currentDay={currentDay}
+              />
+            </div>
+          )}
+
           {/* Program Content Tabs */}
-          <Tabs defaultValue="overview" className="mb-16">
+          <Tabs defaultValue={isEnrolled ? "curriculum" : "overview"} className="mb-16">
             <TabsList className="grid w-full grid-cols-4 lg:grid-cols-4 bg-gray-100">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="curriculum">Curriculum</TabsTrigger>
@@ -243,36 +292,26 @@ const PurposeDiscovery = () => {
                           <CardTitle className="text-xl">Week {module.week}: {module.title}</CardTitle>
                           <CardDescription className="mt-2">{module.description}</CardDescription>
                         </div>
-                        {user && (
-                          <Button 
-                            onClick={() => handleEnrollWeek(module.week)}
-                            disabled={enrolledWeeks.includes(module.week)}
-                            variant={enrolledWeeks.includes(module.week) ? "secondary" : "default"}
-                            className="ml-4"
-                          >
-                            {enrolledWeeks.includes(module.week) ? "Enrolled" : "Start Week"}
-                          </Button>
-                        )}
                       </div>
                     </CardHeader>
                     <CardContent className="p-0">
                       <Accordion type="single" collapsible>
                         <AccordionItem value={`week-${module.week}`} className="border-none">
                           <AccordionTrigger className="px-6 py-4 hover:bg-gray-50">
-                            View Daily Breakdown
+                            View Daily Lessons
                           </AccordionTrigger>
                           <AccordionContent className="px-6 pb-6">
-                            <div className="grid gap-3">
+                            <div className="grid gap-4">
                               {module.days.map((day) => (
-                                <div key={day.day} className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-                                  <div className="w-8 h-8 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-sm font-semibold">
-                                    {day.day}
-                                  </div>
-                                  <div>
-                                    <h4 className="font-semibold text-gray-800">{day.title}</h4>
-                                    <p className="text-gray-600 text-sm mt-1">{day.description}</p>
-                                  </div>
-                                </div>
+                                <LessonCard
+                                  key={day.day}
+                                  day={day.day}
+                                  title={day.title}
+                                  description={day.description}
+                                  status={isEnrolled ? getLessonStatus(module.week, day.day) : 'not_started'}
+                                  onStart={() => handleStartLesson(module.week, day.day)}
+                                  onComplete={() => handleCompleteLesson(module.week, day.day)}
+                                />
                               ))}
                             </div>
                           </AccordionContent>

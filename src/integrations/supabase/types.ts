@@ -33,6 +33,117 @@ export type Database = {
         }
         Relationships: []
       }
+      course_enrollments: {
+        Row: {
+          completed_at: string | null
+          course_id: string
+          created_at: string
+          enrolled_at: string
+          id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          course_id: string
+          created_at?: string
+          enrolled_at?: string
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          course_id?: string
+          created_at?: string
+          enrolled_at?: string
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      lesson_progress: {
+        Row: {
+          completed_at: string | null
+          course_id: string
+          created_at: string
+          day_number: number
+          id: string
+          notes: string | null
+          started_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+          week_number: number
+        }
+        Insert: {
+          completed_at?: string | null
+          course_id: string
+          created_at?: string
+          day_number: number
+          id?: string
+          notes?: string | null
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          week_number: number
+        }
+        Update: {
+          completed_at?: string | null
+          course_id?: string
+          created_at?: string
+          day_number?: number
+          id?: string
+          notes?: string | null
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          week_number?: number
+        }
+        Relationships: []
+      }
+      lesson_responses: {
+        Row: {
+          course_id: string
+          created_at: string
+          day_number: number
+          id: string
+          question_id: string
+          response: string
+          updated_at: string
+          user_id: string
+          week_number: number
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          day_number: number
+          id?: string
+          question_id: string
+          response: string
+          updated_at?: string
+          user_id: string
+          week_number: number
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          day_number?: number
+          id?: string
+          question_id?: string
+          response?: string
+          updated_at?: string
+          user_id?: string
+          week_number?: number
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           content: string
