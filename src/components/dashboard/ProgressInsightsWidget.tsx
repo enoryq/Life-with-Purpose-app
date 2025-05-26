@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -6,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { useUserGoals } from '@/hooks/useUserGoals';
 import { useDailyReflections } from '@/hooks/useDailyReflections';
 import { useVisionBoard } from '@/hooks/useVisionBoard';
-import { TrendingUp, Calendar, Zap, Award } from 'lucide-react';
+import { TrendingUp, Calendar, Zap, Award, Target } from 'lucide-react';
 
 const ProgressInsightsWidget = () => {
   const { goals } = useUserGoals();
