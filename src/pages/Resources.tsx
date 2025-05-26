@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Book, Video, Headphones, FileText, Download, ExternalLink, Wrench } from 'lucide-react';
-import ToolsAndTemplates from '../components/tools/ToolsAndTemplates';
+import { Book, Video, Headphones, FileText, Download, ExternalLink, Wrench, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Resources = () => {
   const resourceTypes = [
@@ -86,6 +86,29 @@ const Resources = () => {
             </p>
           </div>
 
+          {/* Interactive Tools Call-to-Action */}
+          <Card className="mb-16 bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200 border-2">
+            <CardHeader className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Wrench className="w-8 h-8 text-white" />
+              </div>
+              <CardTitle className="text-2xl text-purple-800">
+                Looking for Interactive Tools?
+              </CardTitle>
+              <CardDescription className="text-lg text-gray-700">
+                We've created a dedicated space for all our interactive tools and templates
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="text-center">
+              <Link to="/tools">
+                <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-lg px-8 py-4">
+                  Explore Interactive Tools
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
           {/* Resource Types */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
             {resourceTypes.map((type, index) => (
@@ -108,9 +131,8 @@ const Resources = () => {
 
           {/* Main Content Tabs */}
           <Tabs defaultValue="featured" className="space-y-8">
-            <TabsList className="grid w-full grid-cols-3 max-w-md mx-auto">
+            <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto">
               <TabsTrigger value="featured">Featured</TabsTrigger>
-              <TabsTrigger value="tools">Interactive Tools</TabsTrigger>
               <TabsTrigger value="browse">Browse All</TabsTrigger>
             </TabsList>
 
@@ -150,7 +172,13 @@ const Resources = () => {
                             </Button>
                             <Button size="sm" className="bg-gradient-to-r from-purple-600 to-blue-600">
                               <Download className="w-4 h-4 mr-2" />
-                              {resource.type === "Interactive Tool" ? "Use Tool" : "Download"}
+                              {resource.type === "Interactive Tool" ? (
+                                <Link to="/tools" className="flex items-center">
+                                  Use Tool
+                                </Link>
+                              ) : (
+                                "Download"
+                              )}
                             </Button>
                           </div>
                         </div>
@@ -159,10 +187,6 @@ const Resources = () => {
                   ))}
                 </div>
               </div>
-            </TabsContent>
-
-            <TabsContent value="tools" className="space-y-8">
-              <ToolsAndTemplates />
             </TabsContent>
 
             <TabsContent value="browse" className="space-y-8">

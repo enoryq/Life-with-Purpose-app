@@ -11,6 +11,7 @@ import About from "./pages/About";
 import Programs from "./pages/Programs";
 import PurposeDiscovery from "./pages/PurposeDiscovery";
 import Resources from "./pages/Resources";
+import Tools from "./pages/Tools";
 import Community from "./pages/Community";
 import Help from "./pages/Help";
 import Contact from "./pages/Contact";
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="/programs" element={<Programs />} />
             <Route path="/programs/purpose-discovery" element={<PurposeDiscovery />} />
             <Route path="/resources" element={<Resources />} />
+            <Route path="/tools" element={<Tools />} />
             <Route path="/community" element={<Community />} />
             <Route path="/help" element={<Help />} />
             <Route path="/contact" element={<Contact />} />

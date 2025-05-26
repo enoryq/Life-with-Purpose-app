@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { Link, useNavigate } from 'react-router-dom';
-import { Heart, MessageCircle, LogOut, User } from 'lucide-react';
+import { Heart, MessageCircle, LogOut, User, Wrench } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 const Header = () => {
@@ -35,6 +35,10 @@ const Header = () => {
             </Link>
             <Link to="/resources" className="text-gray-700 hover:text-purple-600 transition-colors">
               Resources
+            </Link>
+            <Link to="/tools" className="text-gray-700 hover:text-purple-600 transition-colors flex items-center gap-1">
+              <Wrench className="w-4 h-4" />
+              Tools
             </Link>
             <Link to="/community" className="text-gray-700 hover:text-purple-600 transition-colors">
               Community

@@ -22,7 +22,7 @@ const RecommendationsWidget = () => {
       title: "Complete Today's Reflection",
       description: "Take 5 minutes to reflect on your day and set intentions for tomorrow",
       action: "Start Reflection",
-      link: "/resources",
+      link: "/tools",
       icon: BookOpen,
       priority: "high",
       condition: !hasRecentReflection
@@ -32,7 +32,7 @@ const RecommendationsWidget = () => {
       title: "Set Your First Goal",
       description: "Define a meaningful goal to start your purposeful journey",
       action: "Create Goal",
-      link: "/resources",
+      link: "/tools",
       icon: Target,
       priority: "medium",
       condition: !hasActiveGoals
@@ -42,7 +42,7 @@ const RecommendationsWidget = () => {
       title: "Explore Your Values",
       description: "Discover what truly matters to you with our values assessment",
       action: "Take Assessment",
-      link: "/resources",
+      link: "/tools",
       icon: Heart,
       priority: "medium",
       condition: true
