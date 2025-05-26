@@ -1,14 +1,15 @@
-
 import React from 'react';
 import Layout from '../components/Layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Clock, Star, Users, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Programs = () => {
   const programs = [
     {
+      id: 'purpose-discovery',
       title: "30-Day Purpose Discovery",
       description: "Uncover your life's purpose through guided exercises, reflection prompts, and expert insights.",
       duration: "30 days",
@@ -16,7 +17,8 @@ const Programs = () => {
       participants: "2.5K",
       level: "Beginner",
       category: "Self-Discovery",
-      price: "Free"
+      price: "Free",
+      link: "/programs/purpose-discovery"
     },
     {
       title: "Mindful Leadership",
@@ -143,10 +145,19 @@ const Programs = () => {
                     </div>
                   </div>
                   
-                  <Button className="w-full mt-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-lg">
-                    Start Program Free
-                    <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
+                  {program.link ? (
+                    <Link to={program.link}>
+                      <Button className="w-full mt-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-lg">
+                        View Program Details
+                        <ArrowRight className="ml-2 w-4 h-4" />
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Button className="w-full mt-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-lg">
+                      Start Program Free
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             ))}

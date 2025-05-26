@@ -9,6 +9,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Programs from "./pages/Programs";
+import PurposeDiscovery from "./pages/PurposeDiscovery";
 import Resources from "./pages/Resources";
 import Community from "./pages/Community";
 import Help from "./pages/Help";
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/about" element={<About />} />
             <Route path="/programs" element={<Programs />} />
+            <Route path="/programs/purpose-discovery" element={<PurposeDiscovery />} />
             <Route path="/resources" element={<Resources />} />
             <Route path="/community" element={<Community />} />
             <Route path="/help" element={<Help />} />

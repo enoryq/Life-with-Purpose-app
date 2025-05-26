@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Clock, Star, Users } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const programs = [
   {
@@ -13,7 +14,8 @@ const programs = [
     rating: 4.9,
     participants: "2.5K",
     level: "Beginner",
-    category: "Self-Discovery"
+    category: "Self-Discovery",
+    link: "/programs/purpose-discovery"
   },
   {
     title: "Mindful Leadership",
@@ -85,22 +87,32 @@ const ProgramsPreview = () => {
                   </div>
                 </div>
                 
-                <Button className="w-full mt-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-lg">
-                  Start Program
-                </Button>
+                {program.link ? (
+                  <Link to={program.link}>
+                    <Button className="w-full mt-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-lg">
+                      Start Program
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button className="w-full mt-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-lg">
+                    Start Program
+                  </Button>
+                )}
               </CardContent>
             </Card>
           ))}
         </div>
         
         <div className="text-center mt-12">
-          <Button 
-            variant="outline" 
-            size="lg"
-            className="px-8 py-4 text-lg font-semibold rounded-full border-2 border-purple-300 hover:border-purple-500 hover:bg-purple-50"
-          >
-            View All Programs
-          </Button>
+          <Link to="/programs">
+            <Button 
+              variant="outline" 
+              size="lg"
+              className="px-8 py-4 text-lg font-semibold rounded-full border-2 border-purple-300 hover:border-purple-500 hover:bg-purple-50"
+            >
+              View All Programs
+            </Button>
+          </Link>
         </div>
       </div>
     </section>
