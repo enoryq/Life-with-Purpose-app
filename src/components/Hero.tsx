@@ -14,7 +14,7 @@ const Hero = () => {
       <div className="relative z-10 text-center max-w-5xl mx-auto">
         <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full mb-8 border border-purple-200">
           <Sparkles className="w-4 h-4 text-purple-600" />
-          <span className="text-sm font-medium text-purple-800">Transform Your Life Today</span>
+          <span className="text-sm font-medium text-purple-800">100% Free During Beta</span>
         </div>
         
         <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-purple-800 via-blue-700 to-indigo-800 bg-clip-text text-transparent mb-6 leading-tight">
@@ -31,7 +31,7 @@ const Hero = () => {
             size="lg" 
             className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
           >
-            Start Your Journey
+            Start Free Today
             <ArrowRight className="ml-2 w-5 h-5" />
           </Button>
           
@@ -47,7 +47,7 @@ const Hero = () => {
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
           <div className="text-center">
             <div className="text-3xl font-bold text-purple-700">50+</div>
-            <div className="text-gray-600">Training Programs</div>
+            <div className="text-gray-600">Free Programs</div>
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold text-blue-700">10K+</div>
@@ -55,7 +55,7 @@ const Hero = () => {
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold text-indigo-700">24/7</div>
-            <div className="text-gray-600">Support Access</div>
+            <div className="text-gray-600">Community Support</div>
           </div>
         </div>
       </div>

@@ -18,21 +18,21 @@ const CallToAction = () => {
             </h2>
             
             <p className="text-xl md:text-2xl mb-8 opacity-90 leading-relaxed">
-              Join thousands of people who have already started their journey to a more purposeful life.
+              Join thousands of people who have already started their journey. Everything is completely free while we're in beta!
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 items-center justify-center mb-8">
               <div className="flex items-center gap-3">
                 <CheckCircle className="w-6 h-6 text-green-400" />
-                <span className="text-lg">Free 7-day trial</span>
+                <span className="text-lg">100% Free Access</span>
               </div>
               <div className="flex items-center gap-3">
                 <CheckCircle className="w-6 h-6 text-green-400" />
-                <span className="text-lg">Cancel anytime</span>
+                <span className="text-lg">All Programs Included</span>
               </div>
               <div className="flex items-center gap-3">
                 <CheckCircle className="w-6 h-6 text-green-400" />
-                <span className="text-lg">Expert support</span>
+                <span className="text-lg">Community Support</span>
               </div>
             </div>
             
@@ -40,12 +40,12 @@ const CallToAction = () => {
               size="lg" 
               className="bg-white text-purple-700 hover:bg-gray-100 px-12 py-4 text-xl font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
-              Get Started for Free
+              Get Started Free
               <ArrowRight className="ml-3 w-6 h-6" />
             </Button>
             
             <p className="text-sm opacity-75 mt-6">
-              No credit card required • Start immediately
+              No credit card required • No hidden fees • Start immediately
             </p>
           </div>
         </div>
