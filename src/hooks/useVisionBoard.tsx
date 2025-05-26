@@ -31,7 +31,7 @@ export const useVisionBoard = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setVisionItems(data || []);
+      setVisionItems((data || []) as VisionBoardItem[]);
     } catch (error) {
       console.error('Error fetching vision items:', error);
     } finally {
