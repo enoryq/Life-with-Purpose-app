@@ -44,7 +44,7 @@ export const useLessonProgress = (courseId: string) => {
         return;
       }
 
-      setProgress(data || []);
+      setProgress(data as LessonProgress[] || []);
     } catch (error) {
       console.error('Error fetching progress:', error);
     } finally {
@@ -101,7 +101,7 @@ export const useLessonProgress = (courseId: string) => {
 
       setProgress(prev => {
         const updated = prev.filter(p => !(p.week_number === weekNumber && p.day_number === dayNumber));
-        return [...updated, data].sort((a, b) => {
+        return [...updated, data as LessonProgress].sort((a, b) => {
           if (a.week_number !== b.week_number) return a.week_number - b.week_number;
           return a.day_number - b.day_number;
         });

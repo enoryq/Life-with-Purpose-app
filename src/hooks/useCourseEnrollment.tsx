@@ -40,7 +40,7 @@ export const useCourseEnrollment = (courseId: string) => {
         return;
       }
 
-      setEnrollment(data);
+      setEnrollment(data as CourseEnrollment);
     } catch (error) {
       console.error('Error fetching enrollment:', error);
     } finally {
@@ -79,7 +79,7 @@ export const useCourseEnrollment = (courseId: string) => {
         return;
       }
 
-      setEnrollment(data);
+      setEnrollment(data as CourseEnrollment);
       toast({
         title: "Successfully Enrolled!",
         description: "You've been enrolled in the 30-Day Purpose Discovery program.",
