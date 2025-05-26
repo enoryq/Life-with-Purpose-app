@@ -5,13 +5,15 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Star } from 'lucide-react';
+import { useUserValues } from '@/hooks/useUserValues';
 
 const ValuesAssessment = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [responses, setResponses] = useState<number[]>([]);
   const [showResults, setShowResults] = useState(false);
+  const { values, saveValues } = useUserValues();
 
-  const values = [
+  const valuesOptions = [
     { name: 'Family', description: 'Close relationships with loved ones' },
     { name: 'Achievement', description: 'Accomplishing goals and success' },
     { name: 'Adventure', description: 'Excitement and new experiences' },
@@ -22,25 +24,32 @@ const ValuesAssessment = () => {
     { name: 'Freedom', description: 'Independence and autonomy' }
   ];
 
-  const questions = values.map(value => ({
+  const questions = valuesOptions.map(value => ({
     text: `How important is ${value.name.toLowerCase()} to you?`,
     description: value.description,
     value: value.name
   }));
 
-  const handleResponse = (rating: number) => {
+  const handleResponse = async (rating: number) => {
     const newResponses = [...responses, rating];
     setResponses(newResponses);
 
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
+      // Save to database
+      const valuesData = valuesOptions.map((value, index) => ({
+        name: value.name,
+        rating: newResponses[index]
+      }));
+      
+      await saveValues(valuesData);
       setShowResults(true);
     }
   };
 
   const getTopValues = () => {
-    return values
+    return valuesOptions
       .map((value, index) => ({ ...value, rating: responses[index] || 0 }))
       .sort((a, b) => b.rating - a.rating)
       .slice(0, 3);
@@ -51,6 +60,54 @@ const ValuesAssessment = () => {
     setResponses([]);
     setShowResults(false);
   };
+
+  // Check if user has recent assessment
+  const hasRecentAssessment = values.length > 0 && 
+    new Date(values[0].assessment_date).toDateString() === new Date().toDateString();
+
+  if (hasRecentAssessment && !showResults && responses.length === 0) {
+    const todaysValues = values.filter(v => 
+      new Date(v.assessment_date).toDateString() === new Date().toDateString()
+    );
+    
+    return (
+      <Card className="w-full max-w-2xl mx-auto">
+        <CardHeader>
+          <CardTitle className="text-2xl text-center">Today's Values Assessment</CardTitle>
+          <CardDescription className="text-center">
+            You've already completed your values assessment today. Here are your results:
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {todaysValues
+            .sort((a, b) => b.rating - a.rating)
+            .slice(0, 3)
+            .map((value, index) => (
+            <div key={value.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <Badge className="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+                  #{index + 1}
+                </Badge>
+                <div>
+                  <h3 className="font-semibold text-lg">{value.value_name}</h3>
+                </div>
+              </div>
+              <div className="flex">
+                {[...Array(value.rating)].map((_, i) => (
+                  <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                ))}
+              </div>
+            </div>
+          ))}
+          <div className="text-center">
+            <Button onClick={resetAssessment} variant="outline">
+              Retake Assessment
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   if (showResults) {
     const topValues = getTopValues();

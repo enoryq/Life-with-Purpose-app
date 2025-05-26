@@ -6,6 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import UserStatsWidget from '../components/dashboard/UserStatsWidget';
+import VisionBoardWidget from '../components/dashboard/VisionBoardWidget';
+import RecentGoalsWidget from '../components/dashboard/RecentGoalsWidget';
 import { 
   User, 
   BookOpen, 
@@ -16,8 +19,10 @@ import {
   Play, 
   Download,
   MessageCircle,
-  TrendingUp
+  TrendingUp,
+  Wrench
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
   const currentPrograms = [
@@ -93,41 +98,38 @@ const Dashboard = () => {
               </div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <Card className="bg-gradient-to-br from-purple-100 to-purple-200 border-0">
-                <CardContent className="p-4 text-center">
-                  <BookOpen className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-                  <div className="text-2xl font-bold text-purple-800">2</div>
-                  <div className="text-sm text-purple-700">Active Programs</div>
-                </CardContent>
-              </Card>
-              <Card className="bg-gradient-to-br from-blue-100 to-blue-200 border-0">
-                <CardContent className="p-4 text-center">
-                  <Target className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                  <div className="text-2xl font-bold text-blue-800">12</div>
-                  <div className="text-sm text-blue-700">Lessons Completed</div>
-                </CardContent>
-              </Card>
-              <Card className="bg-gradient-to-br from-green-100 to-green-200 border-0">
-                <CardContent className="p-4 text-center">
-                  <Trophy className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                  <div className="text-2xl font-bold text-green-800">3</div>
-                  <div className="text-sm text-green-700">Achievements</div>
-                </CardContent>
-              </Card>
-              <Card className="bg-gradient-to-br from-orange-100 to-orange-200 border-0">
-                <CardContent className="p-4 text-center">
-                  <Clock className="w-8 h-8 text-orange-600 mx-auto mb-2" />
-                  <div className="text-2xl font-bold text-orange-800">7</div>
-                  <div className="text-sm text-orange-700">Day Streak</div>
-                </CardContent>
-              </Card>
-            </div>
+            {/* User Stats Widget */}
+            <UserStatsWidget />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-8">
+              {/* Interactive Tools Quick Access */}
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-6">Interactive Tools</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Link to="/resources">
+                    <Card className="hover:shadow-lg transition-shadow cursor-pointer border-0 bg-gradient-to-r from-purple-50 to-blue-50">
+                      <CardContent className="p-4 text-center">
+                        <Wrench className="w-8 h-8 text-purple-600 mx-auto mb-2" />
+                        <h3 className="font-semibold text-gray-800">Tools & Templates</h3>
+                        <p className="text-sm text-gray-600">Access values assessment, goal setting, and more</p>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                  <Link to="/chat">
+                    <Card className="hover:shadow-lg transition-shadow cursor-pointer border-0 bg-gradient-to-r from-green-50 to-blue-50">
+                      <CardContent className="p-4 text-center">
+                        <MessageCircle className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                        <h3 className="font-semibold text-gray-800">AI Companion</h3>
+                        <p className="text-sm text-gray-600">Get personalized guidance and support</p>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </div>
+              </div>
+
               {/* Current Programs */}
               <div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-6">Continue Learning</h2>
@@ -190,6 +192,12 @@ const Dashboard = () => {
 
             {/* Sidebar */}
             <div className="space-y-8">
+              {/* Vision Board Widget */}
+              <VisionBoardWidget />
+
+              {/* Recent Goals Widget */}
+              <RecentGoalsWidget />
+
               {/* Achievements */}
               <div>
                 <h2 className="text-xl font-bold text-gray-800 mb-4">Achievements</h2>
@@ -239,18 +247,24 @@ const Dashboard = () => {
               <div>
                 <h2 className="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
                 <div className="space-y-2">
-                  <Button variant="outline" className="w-full justify-start border-purple-300 text-purple-600 hover:bg-purple-50">
-                    <BookOpen className="mr-2 w-4 h-4" />
-                    Browse Programs
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start border-purple-300 text-purple-600 hover:bg-purple-50">
-                    <Download className="mr-2 w-4 h-4" />
-                    Download Resources
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start border-purple-300 text-purple-600 hover:bg-purple-50">
-                    <MessageCircle className="mr-2 w-4 h-4" />
-                    Join Community
-                  </Button>
+                  <Link to="/programs">
+                    <Button variant="outline" className="w-full justify-start border-purple-300 text-purple-600 hover:bg-purple-50">
+                      <BookOpen className="mr-2 w-4 h-4" />
+                      Browse Programs
+                    </Button>
+                  </Link>
+                  <Link to="/resources">
+                    <Button variant="outline" className="w-full justify-start border-purple-300 text-purple-600 hover:bg-purple-50">
+                      <Download className="mr-2 w-4 h-4" />
+                      Interactive Tools
+                    </Button>
+                  </Link>
+                  <Link to="/community">
+                    <Button variant="outline" className="w-full justify-start border-purple-300 text-purple-600 hover:bg-purple-50">
+                      <MessageCircle className="mr-2 w-4 h-4" />
+                      Join Community
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>

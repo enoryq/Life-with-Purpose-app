@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, BookOpen, Sparkles } from 'lucide-react';
+import { useDailyReflections } from '@/hooks/useDailyReflections';
 
 const DailyReflection = () => {
-  const [reflections, setReflections] = useState<any[]>([]);
+  const { reflections, saveReflection } = useDailyReflections();
   const [currentReflection, setCurrentReflection] = useState({
     gratitude: '',
     accomplishment: '',
@@ -26,14 +27,9 @@ const DailyReflection = () => {
     { key: 'tomorrow', label: 'What will I focus on tomorrow?', placeholder: 'Your intentions and priorities for tomorrow...' }
   ];
 
-  const saveReflection = () => {
+  const handleSaveReflection = async () => {
     if (currentReflection.gratitude || currentReflection.accomplishment) {
-      const newReflection = {
-        ...currentReflection,
-        date: new Date().toISOString().split('T')[0],
-        id: Date.now()
-      };
-      setReflections([newReflection, ...reflections]);
+      await saveReflection(currentReflection);
       setCurrentReflection({
         gratitude: '',
         accomplishment: '',
@@ -45,7 +41,7 @@ const DailyReflection = () => {
     }
   };
 
-  const todaysReflection = reflections.find(r => r.date === new Date().toISOString().split('T')[0]);
+  const todaysReflection = reflections.find(r => r.reflection_date === new Date().toISOString().split('T')[0]);
 
   if (!showForm && !todaysReflection && reflections.length === 0) {
     return (
@@ -114,7 +110,7 @@ const DailyReflection = () => {
           ))}
 
           <div className="flex gap-2">
-            <Button onClick={saveReflection} className="bg-gradient-to-r from-purple-600 to-blue-600">
+            <Button onClick={handleSaveReflection} className="bg-gradient-to-r from-purple-600 to-blue-600">
               Save Reflection
             </Button>
             <Button onClick={() => setShowForm(false)} variant="outline">
@@ -148,7 +144,7 @@ const DailyReflection = () => {
                 <Calendar className="w-5 h-5" />
                 Today's Reflection
               </CardTitle>
-              <Badge className="bg-purple-600">{todaysReflection.mood}</Badge>
+              {todaysReflection.mood && <Badge className="bg-purple-600">{todaysReflection.mood}</Badge>}
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -181,12 +177,12 @@ const DailyReflection = () => {
       )}
 
       <div className="grid gap-4">
-        {reflections.filter(r => r.date !== new Date().toISOString().split('T')[0]).map((reflection) => (
+        {reflections.filter(r => r.reflection_date !== new Date().toISOString().split('T')[0]).map((reflection) => (
           <Card key={reflection.id}>
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg">
-                  {new Date(reflection.date).toLocaleDateString('en-US', { 
+                  {new Date(reflection.reflection_date).toLocaleDateString('en-US', { 
                     weekday: 'long', 
                     year: 'numeric', 
                     month: 'long', 

@@ -7,9 +7,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Target, CheckCircle } from 'lucide-react';
+import { useUserGoals } from '@/hooks/useUserGoals';
 
 const GoalSettingTemplate = () => {
-  const [goals, setGoals] = useState<any[]>([]);
+  const { goals, saveGoal, updateGoalStatus } = useUserGoals();
   const [currentGoal, setCurrentGoal] = useState({
     title: '',
     description: '',
@@ -27,9 +28,17 @@ const GoalSettingTemplate = () => {
     setCurrentGoal({ ...currentGoal, steps: newSteps });
   };
 
-  const saveGoal = () => {
+  const handleSaveGoal = async () => {
     if (currentGoal.title && currentGoal.description) {
-      setGoals([...goals, { ...currentGoal, id: Date.now(), completed: false }]);
+      await saveGoal({
+        title: currentGoal.title,
+        description: currentGoal.description,
+        deadline: currentGoal.deadline || undefined,
+        category: currentGoal.category || undefined,
+        steps: currentGoal.steps.filter(step => step.trim()),
+        status: 'active'
+      });
+      
       setCurrentGoal({
         title: '',
         description: '',
@@ -41,10 +50,9 @@ const GoalSettingTemplate = () => {
     }
   };
 
-  const toggleGoalComplete = (id: number) => {
-    setGoals(goals.map(goal => 
-      goal.id === id ? { ...goal, completed: !goal.completed } : goal
-    ));
+  const toggleGoalComplete = async (goalId: string, currentStatus: string) => {
+    const newStatus = currentStatus === 'completed' ? 'active' : 'completed';
+    await updateGoalStatus(goalId, newStatus as 'active' | 'completed');
   };
 
   if (!showForm && goals.length === 0) {
@@ -139,7 +147,7 @@ const GoalSettingTemplate = () => {
           </div>
 
           <div className="flex gap-2">
-            <Button onClick={saveGoal} className="bg-gradient-to-r from-purple-600 to-blue-600">
+            <Button onClick={handleSaveGoal} className="bg-gradient-to-r from-purple-600 to-blue-600">
               Save Goal
             </Button>
             <Button onClick={() => setShowForm(false)} variant="outline">
@@ -165,12 +173,12 @@ const GoalSettingTemplate = () => {
 
       <div className="grid gap-6">
         {goals.map((goal) => (
-          <Card key={goal.id} className={goal.completed ? 'opacity-75' : ''}>
+          <Card key={goal.id} className={goal.status === 'completed' ? 'opacity-75' : ''}>
             <CardHeader>
               <div className="flex justify-between items-start">
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <CardTitle className={`text-xl ${goal.completed ? 'line-through' : ''}`}>
+                    <CardTitle className={`text-xl ${goal.status === 'completed' ? 'line-through' : ''}`}>
                       {goal.title}
                     </CardTitle>
                     {goal.category && (
@@ -180,12 +188,12 @@ const GoalSettingTemplate = () => {
                   <CardDescription>{goal.description}</CardDescription>
                 </div>
                 <Button
-                  onClick={() => toggleGoalComplete(goal.id)}
-                  variant={goal.completed ? "default" : "outline"}
+                  onClick={() => toggleGoalComplete(goal.id, goal.status)}
+                  variant={goal.status === 'completed' ? "default" : "outline"}
                   size="sm"
                 >
                   <CheckCircle className="w-4 h-4 mr-2" />
-                  {goal.completed ? 'Completed' : 'Mark Complete'}
+                  {goal.status === 'completed' ? 'Completed' : 'Mark Complete'}
                 </Button>
               </div>
             </CardHeader>
@@ -196,15 +204,17 @@ const GoalSettingTemplate = () => {
                   Target: {new Date(goal.deadline).toLocaleDateString()}
                 </div>
               )}
-              <div className="space-y-2">
-                <h4 className="font-medium">Action Steps:</h4>
-                {goal.steps.filter((step: string) => step.trim()).map((step: string, index: number) => (
-                  <div key={index} className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
-                    {step}
-                  </div>
-                ))}
-              </div>
+              {goal.steps && goal.steps.length > 0 && (
+                <div className="space-y-2">
+                  <h4 className="font-medium">Action Steps:</h4>
+                  {goal.steps.map((step: string, index: number) => (
+                    <div key={index} className="flex items-center gap-2 text-sm">
+                      <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
+                      {step}
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         ))}

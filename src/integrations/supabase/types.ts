@@ -66,6 +66,45 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_reflections: {
+        Row: {
+          accomplishment: string | null
+          challenge: string | null
+          created_at: string
+          gratitude: string | null
+          id: string
+          mood: string | null
+          reflection_date: string
+          tomorrow: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accomplishment?: string | null
+          challenge?: string | null
+          created_at?: string
+          gratitude?: string | null
+          id?: string
+          mood?: string | null
+          reflection_date?: string
+          tomorrow?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accomplishment?: string | null
+          challenge?: string | null
+          created_at?: string
+          gratitude?: string | null
+          id?: string
+          mood?: string | null
+          reflection_date?: string
+          tomorrow?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       lesson_progress: {
         Row: {
           completed_at: string | null
@@ -200,6 +239,141 @@ export type Database = {
           full_name?: string | null
           id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      user_activities: {
+        Row: {
+          activity_data: Json | null
+          activity_type: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          activity_data?: Json | null
+          activity_type: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          activity_data?: Json | null
+          activity_type?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_goals: {
+        Row: {
+          category: string | null
+          completed_at: string | null
+          created_at: string
+          deadline: string | null
+          description: string | null
+          id: string
+          status: string
+          steps: string[] | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          completed_at?: string | null
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          status?: string
+          steps?: string[] | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          completed_at?: string | null
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          status?: string
+          steps?: string[] | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_values: {
+        Row: {
+          assessment_date: string
+          created_at: string
+          id: string
+          rating: number
+          updated_at: string
+          user_id: string
+          value_name: string
+        }
+        Insert: {
+          assessment_date?: string
+          created_at?: string
+          id?: string
+          rating: number
+          updated_at?: string
+          user_id: string
+          value_name: string
+        }
+        Update: {
+          assessment_date?: string
+          created_at?: string
+          id?: string
+          rating?: number
+          updated_at?: string
+          user_id?: string
+          value_name?: string
+        }
+        Relationships: []
+      }
+      vision_board_items: {
+        Row: {
+          achieved_at: string | null
+          category: string | null
+          created_at: string
+          description: string | null
+          id: string
+          status: string
+          timeframe: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          achieved_at?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          status?: string
+          timeframe?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          achieved_at?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          status?: string
+          timeframe?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
