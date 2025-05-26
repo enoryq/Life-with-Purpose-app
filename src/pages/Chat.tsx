@@ -80,7 +80,12 @@ const Chat = () => {
       console.error('Error loading messages:', error);
       toast.error('Failed to load messages');
     } else {
-      setMessages(data || []);
+      // Type cast the role property to match our Message interface
+      const typedMessages = (data || []).map(msg => ({
+        ...msg,
+        role: msg.role as 'user' | 'assistant'
+      }));
+      setMessages(typedMessages);
     }
   };
 
@@ -131,8 +136,12 @@ const Chat = () => {
         throw userMessageError;
       }
 
-      // Update local state immediately
-      setMessages(prev => [...prev, userMessageData]);
+      // Update local state immediately with properly typed message
+      const typedUserMessage: Message = {
+        ...userMessageData,
+        role: 'user'
+      };
+      setMessages(prev => [...prev, typedUserMessage]);
 
       // Call AI service
       const { data: aiResponse, error: aiError } = await supabase.functions.invoke('gemini-chat', {
@@ -160,8 +169,12 @@ const Chat = () => {
         throw assistantMessageError;
       }
 
-      // Update local state
-      setMessages(prev => [...prev, assistantMessageData]);
+      // Update local state with properly typed message
+      const typedAssistantMessage: Message = {
+        ...assistantMessageData,
+        role: 'assistant'
+      };
+      setMessages(prev => [...prev, typedAssistantMessage]);
 
       // Update conversation title if this is the first message
       if (messages.length === 0) {
