@@ -14,27 +14,103 @@ serve(async (req) => {
   }
 
   try {
-    const { message } = await req.json();
+    const { message, conversationId } = await req.json();
 
     if (!message) {
       throw new Error('Message is required');
     }
 
-    // For now, we'll return a helpful response about purpose and life guidance
-    // This will be replaced with actual Gemini API integration once API key is provided
-    const purposeResponses = [
-      "Finding your purpose starts with understanding your core values and what truly matters to you. What activities make you feel most alive and fulfilled?",
-      "Purpose isn't always a grand calling - it can be found in small, meaningful actions you take each day. What small steps could you take today to align with your values?",
-      "Living with purpose means being intentional about your choices. Consider what legacy you want to leave and work backwards from there.",
-      "Your purpose may evolve over time, and that's perfectly normal. What matters most right now in your life, and how can you honor that?",
-      "Purpose often emerges at the intersection of what you're good at, what you love, what the world needs, and what you can be paid for. Which of these areas would you like to explore?",
-    ];
-
-    const randomResponse = purposeResponses[Math.floor(Math.random() * purposeResponses.length)];
+    const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
     
-    const response = `Thank you for sharing that with me. ${randomResponse}
+    if (!geminiApiKey) {
+      throw new Error('Gemini API key not configured');
+    }
 
-I'm here to help you explore questions about purpose, meaning, and personal growth. Feel free to share more about what's on your mind or what specific areas of your life you'd like to develop.`;
+    console.log('Processing message for conversation:', conversationId);
+    console.log('Message:', message);
+
+    // Call Gemini API
+    const geminiResponse = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: `You are a compassionate AI companion specialized in helping people find their purpose and live meaningful lives. Your role is to provide thoughtful guidance, ask insightful questions, and support users on their journey of self-discovery and personal growth.
+
+Key areas you help with:
+- Purpose discovery and clarification
+- Goal setting and achievement
+- Values exploration
+- Life direction and meaning
+- Personal development
+- Overcoming challenges and obstacles
+- Building fulfilling relationships
+- Creating work-life balance
+- Spiritual and emotional growth
+
+Your approach should be:
+- Empathetic and non-judgmental
+- Thoughtful and reflective
+- Encouraging yet realistic
+- Focused on helping users find their own answers
+- Supportive of their unique journey
+
+User message: ${message}`
+                }
+              ]
+            }
+          ],
+          generationConfig: {
+            temperature: 0.7,
+            topK: 40,
+            topP: 0.95,
+            maxOutputTokens: 1024,
+          },
+          safetySettings: [
+            {
+              category: "HARM_CATEGORY_HARASSMENT",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE"
+            },
+            {
+              category: "HARM_CATEGORY_HATE_SPEECH",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE"
+            },
+            {
+              category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE"
+            },
+            {
+              category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE"
+            }
+          ]
+        }),
+      }
+    );
+
+    if (!geminiResponse.ok) {
+      const errorText = await geminiResponse.text();
+      console.error('Gemini API error:', errorText);
+      throw new Error(`Gemini API error: ${geminiResponse.status} - ${errorText}`);
+    }
+
+    const geminiData = await geminiResponse.json();
+    console.log('Gemini response:', geminiData);
+
+    if (!geminiData.candidates || geminiData.candidates.length === 0) {
+      throw new Error('No response generated from Gemini');
+    }
+
+    const response = geminiData.candidates[0].content.parts[0].text;
+
+    console.log('Generated response:', response);
 
     return new Response(JSON.stringify({ response }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
