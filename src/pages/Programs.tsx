@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Layout from '../components/Layout';
 import { Button } from '@/components/ui/button';
@@ -5,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Clock, Star, Users, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import TopicRequestForm from '@/components/TopicRequestForm';
 
 const Programs = () => {
   const programs = [
@@ -18,7 +20,8 @@ const Programs = () => {
       level: "Beginner",
       category: "Self-Discovery",
       price: "Free",
-      link: "/programs/purpose-discovery"
+      link: "/programs/purpose-discovery",
+      available: true
     },
     {
       title: "Mindful Leadership",
@@ -28,7 +31,8 @@ const Programs = () => {
       participants: "1.8K",
       level: "Intermediate",
       category: "Leadership",
-      price: "Free"
+      price: "Free",
+      available: false
     },
     {
       title: "Stress-Free Living",
@@ -38,7 +42,8 @@ const Programs = () => {
       participants: "3.2K",
       level: "Beginner",
       category: "Wellness",
-      price: "Free"
+      price: "Free",
+      available: false
     },
     {
       title: "Career Transition Blueprint",
@@ -48,7 +53,8 @@ const Programs = () => {
       participants: "1.2K",
       level: "Intermediate",
       category: "Career",
-      price: "Free"
+      price: "Free",
+      available: false
     },
     {
       title: "Relationship Mastery",
@@ -58,7 +64,8 @@ const Programs = () => {
       participants: "2.1K",
       level: "Beginner",
       category: "Relationships",
-      price: "Free"
+      price: "Free",
+      available: false
     },
     {
       title: "Financial Freedom Mindset",
@@ -68,7 +75,8 @@ const Programs = () => {
       participants: "1.5K",
       level: "Advanced",
       category: "Finance",
-      price: "Free"
+      price: "Free",
+      available: false
     }
   ];
 
@@ -114,9 +122,16 @@ const Programs = () => {
                     <Badge variant="secondary" className="bg-purple-100 text-purple-800 hover:bg-purple-200">
                       {program.category}
                     </Badge>
-                    <Badge className="bg-green-100 text-green-800 border-green-200">
-                      {program.price}
-                    </Badge>
+                    <div className="flex gap-2">
+                      <Badge className="bg-green-100 text-green-800 border-green-200">
+                        {program.price}
+                      </Badge>
+                      {!program.available && (
+                        <Badge variant="outline" className="text-orange-600 border-orange-300">
+                          Coming Soon
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                   <CardTitle className="text-xl font-semibold text-gray-800 leading-tight">
                     {program.title}
@@ -145,17 +160,19 @@ const Programs = () => {
                     </div>
                   </div>
                   
-                  {program.link ? (
+                  {program.available && program.link ? (
                     <Link to={program.link}>
                       <Button className="w-full mt-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-lg">
-                        View Program Details
+                        Start Program
                         <ArrowRight className="ml-2 w-4 h-4" />
                       </Button>
                     </Link>
                   ) : (
-                    <Button className="w-full mt-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-lg">
-                      Start Program Free
-                      <ArrowRight className="ml-2 w-4 h-4" />
+                    <Button 
+                      disabled 
+                      className="w-full mt-4 bg-gray-300 text-gray-500 cursor-not-allowed rounded-lg"
+                    >
+                      Coming Soon
                     </Button>
                   )}
                 </CardContent>
@@ -169,9 +186,7 @@ const Programs = () => {
             <p className="text-xl text-gray-600 mb-8">
               We're constantly developing new programs based on community feedback and emerging research.
             </p>
-            <Button variant="outline" size="lg" className="border-purple-300 text-purple-600 hover:bg-purple-50">
-              Request a Program Topic
-            </Button>
+            <TopicRequestForm />
           </div>
         </div>
       </div>

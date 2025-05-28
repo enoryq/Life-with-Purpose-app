@@ -242,6 +242,39 @@ export type Database = {
         }
         Relationships: []
       }
+      program_topic_requests: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          interest_level: string
+          topic_description: string
+          topic_title: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          interest_level: string
+          topic_description: string
+          topic_title: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          interest_level?: string
+          topic_description?: string
+          topic_title?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_activities: {
         Row: {
           activity_data: Json | null

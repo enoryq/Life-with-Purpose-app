@@ -15,7 +15,8 @@ const programs = [
     participants: "2.5K",
     level: "Beginner",
     category: "Self-Discovery",
-    link: "/programs/purpose-discovery"
+    link: "/programs/purpose-discovery",
+    available: true
   },
   {
     title: "Mindful Leadership",
@@ -24,7 +25,8 @@ const programs = [
     rating: 4.8,
     participants: "1.8K",
     level: "Intermediate",
-    category: "Leadership"
+    category: "Leadership",
+    available: false
   },
   {
     title: "Stress-Free Living",
@@ -33,7 +35,8 @@ const programs = [
     rating: 4.9,
     participants: "3.2K",
     level: "Beginner",
-    category: "Wellness"
+    category: "Wellness",
+    available: false
   }
 ];
 
@@ -59,9 +62,16 @@ const ProgramsPreview = () => {
                   <Badge variant="secondary" className="bg-purple-100 text-purple-800 hover:bg-purple-200">
                     {program.category}
                   </Badge>
-                  <Badge variant="outline" className="text-xs">
-                    {program.level}
-                  </Badge>
+                  <div className="flex gap-2">
+                    <Badge variant="outline" className="text-xs">
+                      {program.level}
+                    </Badge>
+                    {!program.available && (
+                      <Badge variant="outline" className="text-orange-600 border-orange-300 text-xs">
+                        Coming Soon
+                      </Badge>
+                    )}
+                  </div>
                 </div>
                 <CardTitle className="text-xl font-semibold text-gray-800 leading-tight">
                   {program.title}
@@ -87,15 +97,18 @@ const ProgramsPreview = () => {
                   </div>
                 </div>
                 
-                {program.link ? (
+                {program.available && program.link ? (
                   <Link to={program.link}>
                     <Button className="w-full mt-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-lg">
                       Start Program
                     </Button>
                   </Link>
                 ) : (
-                  <Button className="w-full mt-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-lg">
-                    Start Program
+                  <Button 
+                    disabled 
+                    className="w-full mt-4 bg-gray-300 text-gray-500 cursor-not-allowed rounded-lg"
+                  >
+                    Coming Soon
                   </Button>
                 )}
               </CardContent>

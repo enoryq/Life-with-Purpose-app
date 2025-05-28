@@ -12,49 +12,64 @@ const Community = () => {
       icon: MessageCircle,
       title: "Discussion Forums",
       description: "Connect with like-minded individuals and share your journey",
-      members: "8.5K"
+      members: "8.5K",
+      comingSoon: true
     },
     {
       icon: Calendar,
       title: "Virtual Events",
       description: "Join live workshops, Q&As, and community gatherings",
-      events: "Weekly"
+      events: "Weekly",
+      comingSoon: true
     },
     {
       icon: Users,
       title: "Support Groups",
       description: "Small group sessions for focused support and accountability",
-      groups: "25+"
+      groups: "25+",
+      comingSoon: true
     },
     {
       icon: Trophy,
       title: "Achievement Sharing",
       description: "Celebrate milestones and inspire others with your progress",
-      badges: "50+"
+      badges: "50+",
+      comingSoon: true
     }
   ];
 
   const upcomingEvents = [
     {
+      title: "Bootcamp Fitness",
+      date: "Every Saturday",
+      time: "06:00 AM EST",
+      type: "Fitness Event",
+      attendees: 25,
+      recurring: true
+    },
+    {
       title: "Monthly Purpose Circle",
       date: "Dec 15, 2024",
       time: "7:00 PM EST",
       type: "Virtual Meetup",
-      attendees: 45
+      attendees: 45,
+      comingSoon: true
     },
     {
       title: "Mindfulness Workshop",
       date: "Dec 18, 2024",
       time: "2:00 PM EST",
       type: "Workshop",
-      attendees: 32
+      attendees: 32,
+      comingSoon: true
     },
     {
       title: "New Year Vision Board Session",
       date: "Dec 28, 2024",
       time: "6:00 PM EST",
       type: "Creative Workshop",
-      attendees: 67
+      attendees: 67,
+      comingSoon: true
     }
   ];
 
@@ -96,9 +111,16 @@ const Community = () => {
                     <feature.icon className="w-8 h-8 text-purple-600" />
                   </div>
                   <CardTitle className="text-xl font-semibold">{feature.title}</CardTitle>
-                  <Badge variant="secondary" className="w-fit mx-auto">
-                    {feature.members || feature.events || feature.groups || feature.badges}
-                  </Badge>
+                  <div className="flex gap-2 justify-center">
+                    <Badge variant="secondary" className="w-fit">
+                      {feature.members || feature.events || feature.groups || feature.badges}
+                    </Badge>
+                    {feature.comingSoon && (
+                      <Badge variant="outline" className="text-orange-600 border-orange-300">
+                        Coming Soon
+                      </Badge>
+                    )}
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <CardDescription className="text-center text-gray-600">
@@ -112,7 +134,7 @@ const Community = () => {
           {/* Upcoming Events */}
           <div className="mb-16">
             <h2 className="text-4xl font-bold text-center text-gray-800 mb-12">Upcoming Events</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {upcomingEvents.map((event, index) => (
                 <Card key={index} className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
                   <CardHeader>
@@ -120,9 +142,21 @@ const Community = () => {
                       <Badge variant="outline" className="text-purple-600 border-purple-300">
                         {event.type}
                       </Badge>
-                      <Badge className="bg-green-100 text-green-800 border-green-200">
-                        Free
-                      </Badge>
+                      <div className="flex gap-1">
+                        <Badge className="bg-green-100 text-green-800 border-green-200">
+                          Free
+                        </Badge>
+                        {event.comingSoon && (
+                          <Badge variant="outline" className="text-orange-600 border-orange-300">
+                            Coming Soon
+                          </Badge>
+                        )}
+                        {event.recurring && (
+                          <Badge className="bg-blue-100 text-blue-800 border-blue-200">
+                            Weekly
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                     <CardTitle className="text-xl font-semibold text-gray-800">
                       {event.title}
@@ -137,11 +171,17 @@ const Community = () => {
                       <div className="text-gray-600 ml-6">{event.time}</div>
                       <div className="flex items-center gap-2 text-gray-600">
                         <Users className="w-4 h-4" />
-                        <span>{event.attendees} attending</span>
+                        <span>{event.attendees} {event.recurring ? 'regular attendees' : 'attending'}</span>
                       </div>
                     </div>
-                    <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
-                      Join Event
+                    <Button 
+                      className={`w-full ${event.comingSoon 
+                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                        : 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700'
+                      }`}
+                      disabled={event.comingSoon}
+                    >
+                      {event.comingSoon ? 'Coming Soon' : 'Join Event'}
                     </Button>
                   </CardContent>
                 </Card>
