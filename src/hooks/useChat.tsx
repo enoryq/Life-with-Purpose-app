@@ -18,7 +18,7 @@ export interface Conversation {
 }
 
 export const useChat = () => {
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -106,7 +106,7 @@ export const useChat = () => {
   };
 
   const sendMessage = async () => {
-    if (!newMessage.trim() || !currentConversationId || loading) return;
+    if (!newMessage.trim() || !currentConversationId || loading || !session) return;
 
     const userMessage = newMessage.trim();
     setNewMessage('');
@@ -137,9 +137,12 @@ export const useChat = () => {
       };
       setMessages(prev => [...prev, typedUserMessage]);
 
-      // Call AI service
+      // Call AI service with authorization header
       const { data: aiResponse, error: aiError } = await supabase.functions.invoke('gemini-chat', {
-        body: { message: userMessage, conversationId: currentConversationId }
+        body: { message: userMessage, conversationId: currentConversationId },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
       });
 
       if (aiError) {
