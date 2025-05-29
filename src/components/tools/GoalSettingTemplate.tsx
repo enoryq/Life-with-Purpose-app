@@ -9,9 +9,23 @@ import { Badge } from '@/components/ui/badge';
 import { Calendar, Target, CheckCircle, Edit, Trash2, Plus, Clock, Star } from 'lucide-react';
 import { useUserGoals } from '@/hooks/useUserGoals';
 
+interface GoalFormData {
+  title: string;
+  description: string;
+  deadline: string;
+  category: string;
+  steps: string[];
+}
+
+interface FormErrors {
+  title?: string;
+  description?: string;
+  steps?: string;
+}
+
 const GoalSettingTemplate = () => {
   const { goals, saveGoal, updateGoalStatus } = useUserGoals();
-  const [currentGoal, setCurrentGoal] = useState({
+  const [currentGoal, setCurrentGoal] = useState<GoalFormData>({
     title: '',
     description: '',
     deadline: '',
@@ -19,8 +33,8 @@ const GoalSettingTemplate = () => {
     steps: ['', '', '']
   });
   const [showForm, setShowForm] = useState(false);
-  const [editingGoal, setEditingGoal] = useState(null);
-  const [errors, setErrors] = useState({});
+  const [editingGoal, setEditingGoal] = useState<string | null>(null);
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const categories = [
     { name: 'Career', color: 'bg-blue-100 text-blue-800', icon: '💼' },
@@ -32,17 +46,17 @@ const GoalSettingTemplate = () => {
   ];
 
   const validateForm = () => {
-    const newErrors = {};
-    if (!currentGoal.title.trim()) newErrors.title = 'Goal title is required';
-    if (!currentGoal.description.trim()) newErrors.description = 'Description is required';
-    if (currentGoal.steps.filter(step => step.trim()).length === 0) {
+    const newErrors: FormErrors = {};
+    if (!currentGoal.title?.trim()) newErrors.title = 'Goal title is required';
+    if (!currentGoal.description?.trim()) newErrors.description = 'Description is required';
+    if (currentGoal.steps?.filter(step => step.trim()).length === 0) {
       newErrors.steps = 'At least one action step is required';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleStepChange = (index, value) => {
+  const handleStepChange = (index: number, value: string) => {
     const newSteps = [...currentGoal.steps];
     newSteps[index] = value;
     setCurrentGoal({ ...currentGoal, steps: newSteps });
@@ -55,7 +69,7 @@ const GoalSettingTemplate = () => {
     });
   };
 
-  const removeStep = (index) => {
+  const removeStep = (index: number) => {
     const newSteps = currentGoal.steps.filter((_, i) => i !== index);
     setCurrentGoal({ ...currentGoal, steps: newSteps });
   };
@@ -88,17 +102,17 @@ const GoalSettingTemplate = () => {
     setErrors({});
   };
 
-  const toggleGoalComplete = async (goalId, currentStatus) => {
+  const toggleGoalComplete = async (goalId: string, currentStatus: string) => {
     const newStatus = currentStatus === 'completed' ? 'active' : 'completed';
     await updateGoalStatus(goalId, newStatus);
   };
 
-  const getCategoryInfo = (categoryName) => {
+  const getCategoryInfo = (categoryName: string) => {
     return categories.find(cat => cat.name === categoryName) || 
            { name: categoryName, color: 'bg-gray-100 text-gray-800', icon: '📋' };
   };
 
-  const getGoalProgress = (goal) => {
+  const getGoalProgress = (goal: any) => {
     if (!goal.steps || goal.steps.length === 0) return 0;
     // This is a simplified progress calculation - in a real app you'd track individual step completion
     return goal.status === 'completed' ? 100 : 30; // Default to 30% for active goals
