@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
@@ -27,21 +28,25 @@ const Hero = () => {
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button 
-            size="lg" 
-            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-          >
-            Start Free Today
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </Button>
+          <Link to="/auth">
+            <Button 
+              size="lg" 
+              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+            >
+              Start Free Today
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          </Link>
           
-          <Button 
-            variant="outline" 
-            size="lg"
-            className="px-8 py-4 text-lg font-semibold rounded-full border-2 border-purple-300 hover:border-purple-500 hover:bg-purple-50 transition-all duration-300"
-          >
-            Explore Programs
-          </Button>
+          <Link to="/programs">
+            <Button 
+              variant="outline" 
+              size="lg"
+              className="px-8 py-4 text-lg font-semibold rounded-full border-2 border-purple-300 hover:border-purple-500 hover:bg-purple-50 transition-all duration-300"
+            >
+              Explore Programs
+            </Button>
+          </Link>
         </div>
         
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">

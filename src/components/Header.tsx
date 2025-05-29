@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { Link, useNavigate } from 'react-router-dom';
-import { Heart, MessageCircle, LogOut, User, Wrench, Menu, X } from 'lucide-react';
+import { Heart, MessageCircle, LogOut, User, Wrench, Menu, X, Info, BookOpen, FileText, Users } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 const Header = () => {
@@ -37,24 +37,28 @@ const Header = () => {
           
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
-            <Link to="/about" className="text-gray-700 hover:text-purple-600 transition-colors">
+            <Link to="/about" className="text-gray-700 hover:text-purple-600 transition-colors flex items-center gap-2">
+              <Info className="w-4 h-4" />
               About
             </Link>
-            <Link to="/programs" className="text-gray-700 hover:text-purple-600 transition-colors">
+            <Link to="/programs" className="text-gray-700 hover:text-purple-600 transition-colors flex items-center gap-2">
+              <BookOpen className="w-4 h-4" />
               Programs
             </Link>
-            <Link to="/resources" className="text-gray-700 hover:text-purple-600 transition-colors">
+            <Link to="/resources" className="text-gray-700 hover:text-purple-600 transition-colors flex items-center gap-2">
+              <FileText className="w-4 h-4" />
               Resources
             </Link>
-            <Link to="/tools" className="text-gray-700 hover:text-purple-600 transition-colors flex items-center gap-1">
+            <Link to="/tools" className="text-gray-700 hover:text-purple-600 transition-colors flex items-center gap-2">
               <Wrench className="w-4 h-4" />
               Tools
             </Link>
-            <Link to="/community" className="text-gray-700 hover:text-purple-600 transition-colors">
+            <Link to="/community" className="text-gray-700 hover:text-purple-600 transition-colors flex items-center gap-2">
+              <Users className="w-4 h-4" />
               Community
             </Link>
             {user && (
-              <Link to="/chat" className="text-gray-700 hover:text-purple-600 transition-colors flex items-center gap-1">
+              <Link to="/chat" className="text-gray-700 hover:text-purple-600 transition-colors flex items-center gap-2">
                 <MessageCircle className="w-4 h-4" />
                 AI Companion
               </Link>
@@ -121,28 +125,31 @@ const Header = () => {
             <div className="space-y-3">
               <Link 
                 to="/about" 
-                className="block text-gray-700 hover:text-purple-600 transition-colors py-2"
+                className="flex items-center gap-3 text-gray-700 hover:text-purple-600 transition-colors py-2"
                 onClick={closeMobileMenu}
               >
+                <Info className="w-4 h-4" />
                 About
               </Link>
               <Link 
                 to="/programs" 
-                className="block text-gray-700 hover:text-purple-600 transition-colors py-2"
+                className="flex items-center gap-3 text-gray-700 hover:text-purple-600 transition-colors py-2"
                 onClick={closeMobileMenu}
               >
+                <BookOpen className="w-4 h-4" />
                 Programs
               </Link>
               <Link 
                 to="/resources" 
-                className="block text-gray-700 hover:text-purple-600 transition-colors py-2"
+                className="flex items-center gap-3 text-gray-700 hover:text-purple-600 transition-colors py-2"
                 onClick={closeMobileMenu}
               >
+                <FileText className="w-4 h-4" />
                 Resources
               </Link>
               <Link 
                 to="/tools" 
-                className="flex items-center gap-2 text-gray-700 hover:text-purple-600 transition-colors py-2"
+                className="flex items-center gap-3 text-gray-700 hover:text-purple-600 transition-colors py-2"
                 onClick={closeMobileMenu}
               >
                 <Wrench className="w-4 h-4" />
@@ -150,15 +157,16 @@ const Header = () => {
               </Link>
               <Link 
                 to="/community" 
-                className="block text-gray-700 hover:text-purple-600 transition-colors py-2"
+                className="flex items-center gap-3 text-gray-700 hover:text-purple-600 transition-colors py-2"
                 onClick={closeMobileMenu}
               >
+                <Users className="w-4 h-4" />
                 Community
               </Link>
               {user && (
                 <Link 
                   to="/chat" 
-                  className="flex items-center gap-2 text-gray-700 hover:text-purple-600 transition-colors py-2"
+                  className="flex items-center gap-3 text-gray-700 hover:text-purple-600 transition-colors py-2"
                   onClick={closeMobileMenu}
                 >
                   <MessageCircle className="w-4 h-4" />

@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Heart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -20,20 +21,52 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4 text-lg">Quick Links</h4>
             <ul className="space-y-2 text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Programs</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Resources</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Community</a></li>
+              <li>
+                <Link to="/about" className="hover:text-white transition-colors">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/programs" className="hover:text-white transition-colors">
+                  Programs
+                </Link>
+              </li>
+              <li>
+                <Link to="/resources" className="hover:text-white transition-colors">
+                  Resources
+                </Link>
+              </li>
+              <li>
+                <Link to="/community" className="hover:text-white transition-colors">
+                  Community
+                </Link>
+              </li>
             </ul>
           </div>
           
           <div>
             <h4 className="font-semibold mb-4 text-lg">Support</h4>
             <ul className="space-y-2 text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+              <li>
+                <Link to="/help" className="hover:text-white transition-colors">
+                  Help Center
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="hover:text-white transition-colors">
+                  Contact Us
+                </Link>
+              </li>
+              <li>
+                <a href="#" className="hover:text-white transition-colors">
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-white transition-colors">
+                  Terms of Service
+                </a>
+              </li>
             </ul>
           </div>
         </div>

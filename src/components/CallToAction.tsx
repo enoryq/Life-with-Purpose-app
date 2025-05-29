@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const CallToAction = () => {
   return (
@@ -36,13 +37,15 @@ const CallToAction = () => {
               </div>
             </div>
             
-            <Button 
-              size="lg" 
-              className="bg-white text-purple-700 hover:bg-gray-100 px-12 py-4 text-xl font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-            >
-              Get Started Free
-              <ArrowRight className="ml-3 w-6 h-6" />
-            </Button>
+            <Link to="/auth">
+              <Button 
+                size="lg" 
+                className="bg-white text-purple-700 hover:bg-gray-100 px-12 py-4 text-xl font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              >
+                Get Started Free
+                <ArrowRight className="ml-3 w-6 h-6" />
+              </Button>
+            </Link>
             
             <p className="text-sm opacity-75 mt-6">
               No credit card required • No hidden fees • Start immediately
