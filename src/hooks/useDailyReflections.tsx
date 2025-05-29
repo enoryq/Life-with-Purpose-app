@@ -11,6 +11,7 @@ interface DailyReflection {
   accomplishment?: string;
   challenge?: string;
   tomorrow?: string;
+  title?: string;
   created_at: string;
 }
 
@@ -28,7 +29,7 @@ export const useDailyReflections = () => {
         .from('daily_reflections')
         .select('*')
         .eq('user_id', user.id)
-        .order('reflection_date', { ascending: false });
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       setReflections(data || []);
@@ -43,9 +44,10 @@ export const useDailyReflections = () => {
     if (!user) return;
 
     try {
+      // Don't use upsert anymore since we want to allow multiple reflections per day
       const { error } = await supabase
         .from('daily_reflections')
-        .upsert({
+        .insert({
           user_id: user.id,
           reflection_date: new Date().toISOString().split('T')[0],
           ...reflectionData
@@ -59,7 +61,7 @@ export const useDailyReflections = () => {
         .insert({
           user_id: user.id,
           activity_type: 'daily_reflection_completed',
-          activity_data: { mood: reflectionData.mood }
+          activity_data: { mood: reflectionData.mood, title: reflectionData.title }
         });
 
       await fetchReflections();
