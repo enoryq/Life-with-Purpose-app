@@ -1,7 +1,6 @@
 
-import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/hooks/useAuth';
+import { useReflectionsFetch } from './useReflectionsFetch';
+import { useReflectionSave } from './useReflectionSave';
 
 interface DailyReflection {
   id: string;
@@ -15,64 +14,26 @@ interface DailyReflection {
   created_at: string;
 }
 
+interface ReflectionData {
+  mood?: string;
+  gratitude?: string;
+  accomplishment?: string;
+  challenge?: string;
+  tomorrow?: string;
+  title?: string;
+}
+
 export const useDailyReflections = () => {
-  const [reflections, setReflections] = useState<DailyReflection[]>([]);
-  const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
+  const { reflections, loading, fetchReflections } = useReflectionsFetch();
+  const { saveReflection: saveReflectionData } = useReflectionSave();
 
-  const fetchReflections = async () => {
-    if (!user) return;
-    
-    setLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from('daily_reflections')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setReflections(data || []);
-    } catch (error) {
-      console.error('Error fetching reflections:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const saveReflection = async (reflectionData: Omit<DailyReflection, 'id' | 'created_at' | 'reflection_date'>) => {
-    if (!user) return;
-
-    try {
-      // Don't use upsert anymore since we want to allow multiple reflections per day
-      const { error } = await supabase
-        .from('daily_reflections')
-        .insert({
-          user_id: user.id,
-          reflection_date: new Date().toISOString().split('T')[0],
-          ...reflectionData
-        });
-
-      if (error) throw error;
-
-      // Track activity
-      await supabase
-        .from('user_activities')
-        .insert({
-          user_id: user.id,
-          activity_type: 'daily_reflection_completed',
-          activity_data: { mood: reflectionData.mood, title: reflectionData.title }
-        });
-
+  const saveReflection = async (reflectionData: ReflectionData) => {
+    const result = await saveReflectionData(reflectionData);
+    if (result?.success) {
       await fetchReflections();
-    } catch (error) {
-      console.error('Error saving reflection:', error);
     }
+    return result;
   };
-
-  useEffect(() => {
-    fetchReflections();
-  }, [user]);
 
   return { reflections, loading, saveReflection, fetchReflections };
 };
