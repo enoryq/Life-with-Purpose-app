@@ -2,11 +2,12 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Clock, Target, Star, BookOpen, Palette } from 'lucide-react';
+import { ArrowLeft, Clock, Target, Star, BookOpen, Palette, Wind, Crown } from 'lucide-react';
 import ValuesAssessment from './ValuesAssessment';
 import GoalSettingTemplate from './GoalSettingTemplate';
 import DailyReflection from './DailyReflection';
 import VisionBoardCreator from './VisionBoardCreator';
+import BreathingVisualizer from './BreathingVisualizer';
 
 interface ToolContainerProps {
   activeTab: string;
@@ -25,7 +26,8 @@ const ToolContainer = ({ activeTab, onBackToOverview }: ToolContainerProps) => {
       color: 'text-yellow-600',
       bgColor: 'bg-yellow-50',
       borderColor: 'border-yellow-200',
-      difficulty: 'Beginner'
+      difficulty: 'Beginner',
+      isPremium: false
     },
     {
       id: 'goals',
@@ -37,7 +39,8 @@ const ToolContainer = ({ activeTab, onBackToOverview }: ToolContainerProps) => {
       color: 'text-blue-600',
       bgColor: 'bg-blue-50',
       borderColor: 'border-blue-200',
-      difficulty: 'Intermediate'
+      difficulty: 'Intermediate',
+      isPremium: false
     },
     {
       id: 'reflection',
@@ -49,7 +52,8 @@ const ToolContainer = ({ activeTab, onBackToOverview }: ToolContainerProps) => {
       color: 'text-green-600',
       bgColor: 'bg-green-50',
       borderColor: 'border-green-200',
-      difficulty: 'Beginner'
+      difficulty: 'Beginner',
+      isPremium: false
     },
     {
       id: 'vision',
@@ -61,7 +65,21 @@ const ToolContainer = ({ activeTab, onBackToOverview }: ToolContainerProps) => {
       color: 'text-purple-600',
       bgColor: 'bg-purple-50',
       borderColor: 'border-purple-200',
-      difficulty: 'Beginner'
+      difficulty: 'Beginner',
+      isPremium: false
+    },
+    {
+      id: 'breathing',
+      title: 'Breathing Visualizer',
+      description: 'Practice guided breathing exercises with visual cues to reduce stress, improve focus, and enhance well-being.',
+      icon: Wind,
+      category: 'Wellness',
+      estimatedTime: '5-15 minutes',
+      color: 'text-cyan-600',
+      bgColor: 'bg-cyan-50',
+      borderColor: 'border-cyan-200',
+      difficulty: 'Beginner',
+      isPremium: true
     }
   ];
 
@@ -84,6 +102,8 @@ const ToolContainer = ({ activeTab, onBackToOverview }: ToolContainerProps) => {
         return <DailyReflection />;
       case 'vision':
         return <VisionBoardCreator />;
+      case 'breathing':
+        return <BreathingVisualizer />;
       default:
         return null;
     }
@@ -109,8 +129,13 @@ const ToolContainer = ({ activeTab, onBackToOverview }: ToolContainerProps) => {
               <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm">
                 <currentTool.icon className={`w-6 h-6 ${currentTool.color}`} />
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-800">{currentTool.title}</h1>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <h1 className="text-2xl font-bold text-gray-800">{currentTool.title}</h1>
+                  {currentTool.isPremium && (
+                    <Crown className="w-5 h-5 text-yellow-500" />
+                  )}
+                </div>
                 <p className="text-gray-600">{currentTool.description}</p>
               </div>
             </div>
@@ -120,6 +145,9 @@ const ToolContainer = ({ activeTab, onBackToOverview }: ToolContainerProps) => {
               <Badge className={getDifficultyColor(currentTool.difficulty)}>
                 {currentTool.difficulty}
               </Badge>
+              {currentTool.isPremium && (
+                <Badge className="bg-yellow-100 text-yellow-800">Premium</Badge>
+              )}
               <div className="flex items-center gap-1 text-gray-600">
                 <Clock className="w-4 h-4" />
                 {currentTool.estimatedTime}

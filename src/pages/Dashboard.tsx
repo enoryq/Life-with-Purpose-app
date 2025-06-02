@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useAuth } from '@/hooks/useAuth';
 import UserStatsWidget from '../components/dashboard/UserStatsWidget';
 import VisionBoardWidget from '../components/dashboard/VisionBoardWidget';
 import RecentGoalsWidget from '../components/dashboard/RecentGoalsWidget';
@@ -29,6 +30,8 @@ import {
 import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
+  const { user } = useAuth();
+  
   const currentPrograms = [
     {
       title: "30-Day Purpose Discovery",
@@ -71,6 +74,19 @@ const Dashboard = () => {
     return "Good evening";
   };
 
+  // Get display name from user data
+  const getDisplayName = () => {
+    if (user?.user_metadata?.full_name) {
+      return user.user_metadata.full_name.split(' ')[0];
+    }
+    if (user?.email) {
+      return user.email.split('@')[0];
+    }
+    return 'Friend';
+  };
+
+  const displayName = getDisplayName();
+
   return (
     <Layout showFooter={false}>
       <div className="pt-8 pb-16 px-4">
@@ -80,12 +96,14 @@ const Dashboard = () => {
             <div className="flex items-center gap-4 mb-6">
               <Avatar className="w-16 h-16">
                 <AvatarImage src="/placeholder.svg" />
-                <AvatarFallback>JD</AvatarFallback>
+                <AvatarFallback className="bg-purple-100 text-purple-600 text-xl font-bold">
+                  {displayName.charAt(0).toUpperCase()}
+                </AvatarFallback>
               </Avatar>
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <Sunrise className="w-5 h-5 text-yellow-500" />
-                  <h1 className="text-3xl font-bold text-gray-800">{getGreeting()}, John!</h1>
+                  <h1 className="text-3xl font-bold text-gray-800">{getGreeting()}, {displayName}!</h1>
                 </div>
                 <p className="text-gray-600">Ready to continue your purposeful journey today?</p>
               </div>
@@ -98,14 +116,11 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-8">
-              {/* Personalized Recommendations */}
-              <RecommendationsWidget />
-
               {/* Interactive Tools Quick Access */}
               <div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-6">Interactive Tools</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Link to="/resources">
+                  <Link to="/tools">
                     <Card className="hover:shadow-lg transition-shadow cursor-pointer border-0 bg-gradient-to-r from-purple-50 to-blue-50">
                       <CardContent className="p-4 text-center">
                         <Wrench className="w-8 h-8 text-purple-600 mx-auto mb-2" />
@@ -161,13 +176,16 @@ const Dashboard = () => {
                 </div>
               </div>
 
+              {/* Personalized Recommendations - Moved Down */}
+              <RecommendationsWidget />
+
               {/* Activity Timeline */}
               <ActivityTimelineWidget />
             </div>
 
             {/* Enhanced Sidebar */}
             <div className="space-y-8">
-              {/* Progress Insights */}
+              {/* Enhanced Progress Insights */}
               <ProgressInsightsWidget />
 
               {/* Vision Board Widget */}
@@ -231,7 +249,7 @@ const Dashboard = () => {
                       Browse Programs
                     </Button>
                   </Link>
-                  <Link to="/resources">
+                  <Link to="/tools">
                     <Button variant="outline" className="w-full justify-start border-purple-300 text-purple-600 hover:bg-purple-50">
                       <Download className="mr-2 w-4 h-4" />
                       Interactive Tools
