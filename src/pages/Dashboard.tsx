@@ -4,76 +4,25 @@ import Layout from '../components/Layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/hooks/useAuth';
-import UserStatsWidget from '../components/dashboard/UserStatsWidget';
-import VisionBoardWidget from '../components/dashboard/VisionBoardWidget';
-import RecentGoalsWidget from '../components/dashboard/RecentGoalsWidget';
-import RecommendationsWidget from '../components/dashboard/RecommendationsWidget';
-import ProgressInsightsWidget from '../components/dashboard/ProgressInsightsWidget';
-import ActivityTimelineWidget from '../components/dashboard/ActivityTimelineWidget';
+import MetricCard from '../components/dashboard/MetricCard';
 import { 
-  User, 
-  BookOpen, 
-  Target, 
-  Calendar, 
-  Trophy, 
-  Clock, 
-  Play, 
-  Download,
   MessageCircle,
+  Calendar,
   TrendingUp,
   Wrench,
-  Sunrise
+  Play,
+  Download,
+  Bell,
+  MapPin,
+  Search
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
   const { user } = useAuth();
   
-  const currentPrograms = [
-    {
-      title: "30-Day Purpose Discovery",
-      progress: 65,
-      nextLesson: "Week 3: Identifying Your Core Values",
-      timeRemaining: "5 days left"
-    },
-    {
-      title: "Mindful Leadership",
-      progress: 30,
-      nextLesson: "Module 2: Self-Awareness Practices",
-      timeRemaining: "6 weeks left"
-    }
-  ];
-
-  const achievements = [
-    { title: "First Steps", description: "Completed your first lesson", earned: true },
-    { title: "Dedicated Learner", description: "7-day learning streak", earned: true },
-    { title: "Community Member", description: "Made your first post", earned: true },
-    { title: "Goal Setter", description: "Set 5 personal goals", earned: false }
-  ];
-
-  const upcomingEvents = [
-    {
-      title: "Monthly Purpose Circle",
-      date: "Dec 15",
-      time: "7:00 PM EST"
-    },
-    {
-      title: "Mindfulness Workshop",
-      date: "Dec 18",
-      time: "2:00 PM EST"
-    }
-  ];
-
-  const currentHour = new Date().getHours();
-  const getGreeting = () => {
-    if (currentHour < 12) return "Good morning";
-    if (currentHour < 17) return "Good afternoon";
-    return "Good evening";
-  };
-
   // Get display name from user data
   const getDisplayName = () => {
     if (user?.user_metadata?.full_name) {
@@ -87,183 +36,242 @@ const Dashboard = () => {
 
   const displayName = getDisplayName();
 
+  const recentTransactions = [
+    {
+      id: 1,
+      title: "Values Assessment Completed",
+      subtitle: "Self-Discovery Tool",
+      amount: "Progress: 100%",
+      icon: "🎯"
+    },
+    {
+      id: 2,
+      title: "Daily Reflection",
+      subtitle: "Mindfulness Practice",
+      amount: "3 entries",
+      icon: "📝"
+    },
+    {
+      id: 3,
+      title: "Goal Setting Session",
+      subtitle: "Planning Tool",
+      amount: "5 goals set",
+      icon: "🎯"
+    }
+  ];
+
   return (
     <Layout showFooter={false}>
-      <div className="pt-8 pb-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          {/* Enhanced Welcome Section */}
-          <div className="mb-8">
-            <div className="flex items-center gap-4 mb-6">
-              <Avatar className="w-16 h-16">
-                <AvatarImage src="/placeholder.svg" />
-                <AvatarFallback className="bg-purple-100 text-purple-600 text-xl font-bold">
-                  {displayName.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <Sunrise className="w-5 h-5 text-yellow-500" />
-                  <h1 className="text-3xl font-bold text-gray-800">{getGreeting()}, {displayName}!</h1>
-                </div>
-                <p className="text-gray-600">Ready to continue your purposeful journey today?</p>
-              </div>
-            </div>
-            
-            {/* User Stats Widget */}
-            <UserStatsWidget />
+      <div className="p-8">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">Dashboard</h1>
+            <p className="text-gray-600">Welcome back, {displayName}! Here's your personal growth overview.</p>
           </div>
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input 
+                type="text" 
+                placeholder="Search..." 
+                className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              />
+            </div>
+            <Button variant="outline" size="icon">
+              <Bell className="w-5 h-5" />
+            </Button>
+            <Avatar className="w-10 h-10">
+              <AvatarFallback className="bg-purple-100 text-purple-600 font-bold">
+                {displayName.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+          </div>
+        </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Content */}
-            <div className="lg:col-span-2 space-y-8">
-              {/* Interactive Tools Quick Access */}
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">Interactive Tools</h2>
+        {/* Metrics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <MetricCard
+            title="Tools Used"
+            value="5"
+            progress={85}
+            change={{ value: "+20%", trend: "up", period: "this month" }}
+            color="purple"
+            viewAllLink="/tools"
+          />
+          <MetricCard
+            title="Reflections"
+            value="12"
+            progress={60}
+            change={{ value: "+30%", trend: "up", period: "this month" }}
+            color="green"
+            viewAllLink="/tools"
+          />
+          <MetricCard
+            title="Goals Set"
+            value="8"
+            progress={75}
+            change={{ value: "+60%", trend: "up", period: "this month" }}
+            color="blue"
+            viewAllLink="/tools"
+          />
+          <MetricCard
+            title="Streak Days"
+            value="14"
+            progress={90}
+            change={{ value: "+90%", trend: "up", period: "this month" }}
+            color="orange"
+            viewAllLink="/dashboard"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content Area */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Progress Chart */}
+            <Card className="border-0 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-lg">Personal Growth Progress</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64 bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg flex items-center justify-center">
+                  <div className="text-center">
+                    <TrendingUp className="w-16 h-16 text-purple-500 mx-auto mb-4" />
+                    <p className="text-gray-600 mb-4">Your growth journey is progressing beautifully!</p>
+                    <div className="flex gap-4 justify-center">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-purple-600">85%</div>
+                        <div className="text-sm text-gray-500">Overall Progress</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-green-600">12</div>
+                        <div className="text-sm text-gray-500">Days Active</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Quick Actions */}
+            <Card className="border-0 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-lg">Quick Actions</CardTitle>
+                <CardDescription>Continue your personal growth journey</CardDescription>
+              </CardHeader>
+              <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Link to="/tools">
-                    <Card className="hover:shadow-lg transition-shadow cursor-pointer border-0 bg-gradient-to-r from-purple-50 to-blue-50">
-                      <CardContent className="p-4 text-center">
-                        <Wrench className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-                        <h3 className="font-semibold text-gray-800">Tools & Templates</h3>
-                        <p className="text-sm text-gray-600">Access values assessment, goal setting, and more</p>
-                      </CardContent>
-                    </Card>
+                    <Button className="w-full h-16 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700">
+                      <div className="flex items-center gap-3">
+                        <Wrench className="w-6 h-6" />
+                        <div className="text-left">
+                          <div className="font-semibold">Interactive Tools</div>
+                          <div className="text-sm opacity-90">Values, goals, reflection</div>
+                        </div>
+                      </div>
+                    </Button>
                   </Link>
                   <Link to="/chat">
-                    <Card className="hover:shadow-lg transition-shadow cursor-pointer border-0 bg-gradient-to-r from-green-50 to-blue-50">
-                      <CardContent className="p-4 text-center">
-                        <MessageCircle className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                        <h3 className="font-semibold text-gray-800">AI Companion</h3>
-                        <p className="text-sm text-gray-600">Get personalized guidance and support</p>
-                      </CardContent>
-                    </Card>
+                    <Button variant="outline" className="w-full h-16 border-purple-200 hover:bg-purple-50">
+                      <div className="flex items-center gap-3">
+                        <MessageCircle className="w-6 h-6 text-purple-600" />
+                        <div className="text-left">
+                          <div className="font-semibold text-purple-600">AI Companion</div>
+                          <div className="text-sm text-gray-600">Get personalized guidance</div>
+                        </div>
+                      </div>
+                    </Button>
                   </Link>
                 </div>
-              </div>
+              </CardContent>
+            </Card>
+          </div>
 
-              {/* Current Programs */}
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">Continue Learning</h2>
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Recent Activity */}
+            <Card className="border-0 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-lg">Recent Activity</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {recentTransactions.map((transaction) => (
+                  <div key={transaction.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center text-lg">
+                      {transaction.icon}
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-medium text-gray-800 text-sm">{transaction.title}</div>
+                      <div className="text-xs text-gray-500">{transaction.subtitle}</div>
+                    </div>
+                    <div className="text-sm font-medium text-purple-600">{transaction.amount}</div>
+                  </div>
+                ))}
+                <Button variant="outline" className="w-full mt-4 border-gray-200 text-gray-600 hover:bg-gray-50">
+                  View All Activity
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Orders Card */}
+            <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-lg text-white">Personal Growth Plan</CardTitle>
+              </CardHeader>
+              <CardContent>
                 <div className="space-y-4">
-                  {currentPrograms.map((program, index) => (
-                    <Card key={index} className="border-0 shadow-lg">
-                      <CardHeader>
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <CardTitle className="text-lg">{program.title}</CardTitle>
-                            <CardDescription>{program.nextLesson}</CardDescription>
-                          </div>
-                          <Badge variant="outline" className="text-purple-600 border-purple-300">
-                            {program.timeRemaining}
-                          </Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div>
-                          <div className="flex justify-between text-sm text-gray-600 mb-2">
-                            <span>Progress</span>
-                            <span>{program.progress}%</span>
-                          </div>
-                          <Progress value={program.progress} className="h-2" />
-                        </div>
-                        <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600">
-                          <Play className="mr-2 w-4 h-4" />
-                          Continue Lesson
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  ))}
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm opacity-90">Current Streak</span>
+                      <Badge className="bg-white/20 text-white border-white/30">14 days</Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm opacity-90">Tools Unlocked</span>
+                      <Badge className="bg-white/20 text-white border-white/30">5/5</Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm opacity-90">Goals Achieved</span>
+                      <Badge className="bg-white/20 text-white border-white/30">3/8</Badge>
+                    </div>
+                  </div>
+                  <Button className="w-full bg-white/20 hover:bg-white/30 text-white border-white/30">
+                    <Download className="w-4 h-4 mr-2" />
+                    Download Progress Report
+                  </Button>
                 </div>
-              </div>
+              </CardContent>
+            </Card>
 
-              {/* Personalized Recommendations - Moved Down */}
-              <RecommendationsWidget />
-
-              {/* Activity Timeline */}
-              <ActivityTimelineWidget />
-            </div>
-
-            {/* Enhanced Sidebar */}
-            <div className="space-y-8">
-              {/* Enhanced Progress Insights */}
-              <ProgressInsightsWidget />
-
-              {/* Vision Board Widget */}
-              <VisionBoardWidget />
-
-              {/* Recent Goals Widget */}
-              <RecentGoalsWidget />
-
-              {/* Achievements */}
-              <div>
-                <h2 className="text-xl font-bold text-gray-800 mb-4">Achievements</h2>
-                <div className="space-y-3">
-                  {achievements.map((achievement, index) => (
-                    <Card key={index} className={`border-0 ${achievement.earned ? 'bg-gradient-to-r from-purple-50 to-blue-50' : 'bg-gray-50'}`}>
-                      <CardContent className="p-4 flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${achievement.earned ? 'bg-purple-200' : 'bg-gray-200'}`}>
-                          <Trophy className={`w-5 h-5 ${achievement.earned ? 'text-purple-600' : 'text-gray-400'}`} />
-                        </div>
-                        <div>
-                          <div className={`font-medium ${achievement.earned ? 'text-gray-800' : 'text-gray-500'}`}>
-                            {achievement.title}
-                          </div>
-                          <div className={`text-xs ${achievement.earned ? 'text-gray-600' : 'text-gray-400'}`}>
-                            {achievement.description}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+            {/* Visitors Card */}
+            <Card className="border-0 shadow-lg">
+              <CardHeader>
+                <div className="flex justify-between items-center">
+                  <CardTitle className="text-lg">Community Insights</CardTitle>
+                  <MapPin className="w-5 h-5 text-gray-400" />
                 </div>
-              </div>
-
-              {/* Upcoming Events */}
-              <div>
-                <h2 className="text-xl font-bold text-gray-800 mb-4">Upcoming Events</h2>
-                <div className="space-y-3">
-                  {upcomingEvents.map((event, index) => (
-                    <Card key={index} className="border-0 shadow">
-                      <CardContent className="p-4">
-                        <div className="font-medium text-gray-800 mb-1">{event.title}</div>
-                        <div className="text-sm text-gray-600 flex items-center gap-2">
-                          <Calendar className="w-4 h-4" />
-                          {event.date} at {event.time}
-                        </div>
-                        <Button size="sm" variant="outline" className="w-full mt-3 border-purple-300 text-purple-600 hover:bg-purple-50">
-                          Join Event
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  ))}
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-2xl font-bold text-gray-800">1,247</span>
+                    <TrendingUp className="w-5 h-5 text-green-500" />
+                  </div>
+                  <p className="text-sm text-gray-600">Active members this month</p>
+                  <div className="h-32 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="text-sm text-gray-600 mb-2">Community Growth</div>
+                      <div className="flex items-center gap-2 justify-center">
+                        <div className="w-2 h-8 bg-blue-400 rounded"></div>
+                        <div className="w-2 h-12 bg-blue-500 rounded"></div>
+                        <div className="w-2 h-16 bg-purple-500 rounded"></div>
+                        <div className="w-2 h-20 bg-purple-600 rounded"></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-
-              {/* Quick Actions */}
-              <div>
-                <h2 className="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
-                <div className="space-y-2">
-                  <Link to="/programs">
-                    <Button variant="outline" className="w-full justify-start border-purple-300 text-purple-600 hover:bg-purple-50">
-                      <BookOpen className="mr-2 w-4 h-4" />
-                      Browse Programs
-                    </Button>
-                  </Link>
-                  <Link to="/tools">
-                    <Button variant="outline" className="w-full justify-start border-purple-300 text-purple-600 hover:bg-purple-50">
-                      <Download className="mr-2 w-4 h-4" />
-                      Interactive Tools
-                    </Button>
-                  </Link>
-                  <Link to="/community">
-                    <Button variant="outline" className="w-full justify-start border-purple-300 text-purple-600 hover:bg-purple-50">
-                      <MessageCircle className="mr-2 w-4 h-4" />
-                      Join Community
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>

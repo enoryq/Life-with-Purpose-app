@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Clock, Target, Star, BookOpen, Palette, Wind, Crown } from 'lucide-react';
+import { ArrowLeft, Clock, Star, BookOpen, Palette, Wind, Crown, Target } from 'lucide-react';
 import ValuesAssessment from './ValuesAssessment';
 import GoalSettingTemplate from './GoalSettingTemplate';
 import DailyReflection from './DailyReflection';
@@ -112,53 +112,55 @@ const ToolContainer = ({ activeTab, onBackToOverview }: ToolContainerProps) => {
   const currentTool = tools.find(t => t.id === activeTab);
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="mb-6">
-        <Button 
-          onClick={onBackToOverview} 
-          variant="outline"
-          className="mb-4 bg-white/80 backdrop-blur-sm hover:bg-white"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Tools Overview
-        </Button>
-        
-        {currentTool && (
-          <div className={`p-6 rounded-xl ${currentTool.bgColor} ${currentTool.borderColor} border-2 mb-6`}>
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm">
-                <currentTool.icon className={`w-6 h-6 ${currentTool.color}`} />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <h1 className="text-2xl font-bold text-gray-800">{currentTool.title}</h1>
-                  {currentTool.isPremium && (
-                    <Crown className="w-5 h-5 text-yellow-500" />
-                  )}
+    <div className="min-h-screen bg-gray-50 p-8">
+      <div className="max-w-6xl mx-auto">
+        <div className="mb-6">
+          <Button 
+            onClick={onBackToOverview} 
+            variant="outline"
+            className="mb-6 bg-white hover:bg-gray-50"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Tools Overview
+          </Button>
+          
+          {currentTool && (
+            <div className="bg-white rounded-xl shadow-lg border-0 p-8 mb-8">
+              <div className="flex items-center gap-6 mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+                  <currentTool.icon className="w-8 h-8 text-white" />
                 </div>
-                <p className="text-gray-600">{currentTool.description}</p>
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-2">
+                    <h1 className="text-3xl font-bold text-gray-800">{currentTool.title}</h1>
+                    {currentTool.isPremium && (
+                      <Crown className="w-6 h-6 text-yellow-500" />
+                    )}
+                  </div>
+                  <p className="text-gray-600 text-lg">{currentTool.description}</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-4 text-sm">
+                <Badge variant="secondary" className="bg-purple-100 text-purple-700">{currentTool.category}</Badge>
+                <Badge className={getDifficultyColor(currentTool.difficulty)}>
+                  {currentTool.difficulty}
+                </Badge>
+                {currentTool.isPremium && (
+                  <Badge className="bg-yellow-100 text-yellow-800">Premium</Badge>
+                )}
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Clock className="w-4 h-4" />
+                  {currentTool.estimatedTime}
+                </div>
               </div>
             </div>
-            
-            <div className="flex items-center gap-4 text-sm">
-              <Badge variant="secondary">{currentTool.category}</Badge>
-              <Badge className={getDifficultyColor(currentTool.difficulty)}>
-                {currentTool.difficulty}
-              </Badge>
-              {currentTool.isPremium && (
-                <Badge className="bg-yellow-100 text-yellow-800">Premium</Badge>
-              )}
-              <div className="flex items-center gap-1 text-gray-600">
-                <Clock className="w-4 h-4" />
-                {currentTool.estimatedTime}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-      
-      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6">
-        {renderToolContent()}
+          )}
+        </div>
+        
+        <div className="bg-white rounded-xl shadow-lg border-0 p-8">
+          {renderToolContent()}
+        </div>
       </div>
     </div>
   );
