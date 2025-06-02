@@ -26,6 +26,12 @@ const ToolsGrid = ({ onToolSelect }: ToolsGridProps) => {
       color: 'text-yellow-600',
       bgColor: 'bg-yellow-50',
       borderColor: 'border-yellow-200',
+      difficulty: 'Beginner',
+      benefits: [
+        'Clarify your personal values',
+        'Make better life decisions',
+        'Increase self-awareness'
+      ],
       isPremium: false
     },
     {
@@ -38,6 +44,12 @@ const ToolsGrid = ({ onToolSelect }: ToolsGridProps) => {
       color: 'text-blue-600',
       bgColor: 'bg-blue-50',
       borderColor: 'border-blue-200',
+      difficulty: 'Intermediate',
+      benefits: [
+        'Set clear, achievable goals',
+        'Track your progress',
+        'Stay motivated and focused'
+      ],
       isPremium: false
     },
     {
@@ -50,6 +62,12 @@ const ToolsGrid = ({ onToolSelect }: ToolsGridProps) => {
       color: 'text-green-600',
       bgColor: 'bg-green-50',
       borderColor: 'border-green-200',
+      difficulty: 'Beginner',
+      benefits: [
+        'Process daily experiences',
+        'Identify patterns and growth',
+        'Build mindfulness habits'
+      ],
       isPremium: false
     },
     {
@@ -62,6 +80,12 @@ const ToolsGrid = ({ onToolSelect }: ToolsGridProps) => {
       color: 'text-purple-600',
       bgColor: 'bg-purple-50',
       borderColor: 'border-purple-200',
+      difficulty: 'Beginner',
+      benefits: [
+        'Visualize your dreams',
+        'Stay motivated',
+        'Clarify your aspirations'
+      ],
       isPremium: false
     },
     {
@@ -74,6 +98,12 @@ const ToolsGrid = ({ onToolSelect }: ToolsGridProps) => {
       color: 'text-cyan-600',
       bgColor: 'bg-cyan-50',
       borderColor: 'border-cyan-200',
+      difficulty: 'Beginner',
+      benefits: [
+        'Reduce stress and anxiety',
+        'Improve focus and clarity',
+        'Enhance overall well-being'
+      ],
       isPremium: true
     }
   ];
@@ -85,9 +115,8 @@ const ToolsGrid = ({ onToolSelect }: ToolsGridProps) => {
         {tools.map((tool) => (
           <ToolCard 
             key={tool.id}
-            {...tool}
-            onClick={() => onToolSelect(tool.id)}
-            disabled={tool.isPremium && !isPaidMember}
+            tool={tool}
+            onToolSelect={onToolSelect}
           />
         ))}
       </div>
