@@ -16,7 +16,7 @@ import {
   Info,
   Heart,
   LogIn,
-  UserPlus,
+  Sparkles,
   LogOut,
   Phone
 } from 'lucide-react';
@@ -143,17 +143,23 @@ const AppSidebar = () => {
                 <>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <Link to="/auth" className="flex items-center gap-3 text-sm font-medium text-purple-600 hover:text-purple-700">
+                      <Link 
+                        to="/auth?mode=signin" 
+                        className="flex items-center gap-3 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md px-3 py-2 transition-colors"
+                      >
                         <LogIn className="w-5 h-5" />
-                        Sign In
+                        <span>Sign In</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <Link to="/auth" className="flex items-center gap-3 text-sm font-medium bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 rounded-md px-3 py-2">
-                        <UserPlus className="w-5 h-5" />
-                        Get Started
+                      <Link 
+                        to="/auth?mode=signup" 
+                        className="flex items-center gap-3 text-sm font-medium bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 rounded-md px-3 py-2 transition-all duration-200 shadow-md hover:shadow-lg"
+                      >
+                        <Sparkles className="w-5 h-5" />
+                        <span>Get Started</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
