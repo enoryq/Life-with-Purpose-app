@@ -75,6 +75,7 @@ export type Database = {
           id: string
           mood: string | null
           reflection_date: string
+          title: string | null
           tomorrow: string | null
           updated_at: string
           user_id: string
@@ -87,6 +88,7 @@ export type Database = {
           id?: string
           mood?: string | null
           reflection_date?: string
+          title?: string | null
           tomorrow?: string | null
           updated_at?: string
           user_id: string
@@ -99,6 +101,7 @@ export type Database = {
           id?: string
           mood?: string | null
           reflection_date?: string
+          title?: string | null
           tomorrow?: string | null
           updated_at?: string
           user_id?: string
@@ -275,6 +278,39 @@ export type Database = {
         }
         Relationships: []
       }
+      tool_usage_sessions: {
+        Row: {
+          activity_data: Json | null
+          created_at: string
+          duration_minutes: number | null
+          id: string
+          session_end: string | null
+          session_start: string
+          tool_name: string
+          user_id: string
+        }
+        Insert: {
+          activity_data?: Json | null
+          created_at?: string
+          duration_minutes?: number | null
+          id?: string
+          session_end?: string | null
+          session_start?: string
+          tool_name: string
+          user_id: string
+        }
+        Update: {
+          activity_data?: Json | null
+          created_at?: string
+          duration_minutes?: number | null
+          id?: string
+          session_end?: string | null
+          session_start?: string
+          tool_name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_activities: {
         Row: {
           activity_data: Json | null
@@ -295,6 +331,48 @@ export type Database = {
           activity_type?: string
           created_at?: string
           id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_engagement_metrics: {
+        Row: {
+          created_at: string
+          goals_completed: number | null
+          goals_created: number | null
+          id: string
+          metric_date: string
+          reflections_count: number | null
+          streak_days: number | null
+          tools_used: string[] | null
+          total_session_time: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          goals_completed?: number | null
+          goals_created?: number | null
+          id?: string
+          metric_date?: string
+          reflections_count?: number | null
+          streak_days?: number | null
+          tools_used?: string[] | null
+          total_session_time?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          goals_completed?: number | null
+          goals_created?: number | null
+          id?: string
+          metric_date?: string
+          reflections_count?: number | null
+          streak_days?: number | null
+          tools_used?: string[] | null
+          total_session_time?: number | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -415,7 +493,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      update_engagement_metrics: {
+        Args: {
+          p_user_id: string
+          p_tool_name?: string
+          p_session_minutes?: number
+          p_reflection_count?: number
+          p_goal_created?: number
+          p_goal_completed?: number
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

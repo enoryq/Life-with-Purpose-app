@@ -1,14 +1,17 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Palette, Image, Target, Plus, X } from 'lucide-react';
+import { useVisionBoard } from '@/hooks/useVisionBoard';
+import { useToolSession } from '@/hooks/useToolSession';
 
 const VisionBoardCreator = () => {
-  const [visionItems, setVisionItems] = useState<any[]>([]);
+  const { visionItems, saveVisionItem, updateVisionItemStatus } = useVisionBoard();
+  const { startSession, endSession, isTracking } = useToolSession('Vision Board');
   const [currentItem, setCurrentItem] = useState({
     title: '',
     description: '',
@@ -16,6 +19,21 @@ const VisionBoardCreator = () => {
     timeframe: ''
   });
   const [showForm, setShowForm] = useState(false);
+
+  // Start session when component mounts
+  useEffect(() => {
+    startSession({ action: 'view_vision_board', total_items: visionItems.length });
+    
+    return () => {
+      if (isTracking) {
+        endSession({ 
+          action: 'exit_vision_board', 
+          total_items: visionItems.length,
+          items_added: 0 // This could be tracked with state
+        });
+      }
+    };
+  }, []);
 
   const categories = [
     { name: 'Career', color: 'bg-blue-500', emoji: '💼' },
@@ -30,20 +48,55 @@ const VisionBoardCreator = () => {
 
   const timeframes = ['1 year', '3 years', '5 years', '10+ years'];
 
-  const addVisionItem = () => {
+  const addVisionItem = async () => {
     if (currentItem.title && currentItem.description) {
-      setVisionItems([...visionItems, { ...currentItem, id: Date.now() }]);
+      await saveVisionItem({
+        title: currentItem.title,
+        description: currentItem.description,
+        category: currentItem.category || undefined,
+        timeframe: currentItem.timeframe || undefined,
+        status: 'active'
+      });
+      
       setCurrentItem({ title: '', description: '', category: '', timeframe: '' });
       setShowForm(false);
+      
+      // Track vision item creation
+      if (isTracking) {
+        endSession({ 
+          action: 'vision_item_created',
+          item_data: { 
+            category: currentItem.category, 
+            timeframe: currentItem.timeframe 
+          }
+        });
+        startSession({ action: 'post_creation_view' });
+      }
     }
   };
 
-  const removeVisionItem = (id: number) => {
-    setVisionItems(visionItems.filter(item => item.id !== id));
+  const removeVisionItem = async (id: string) => {
+    await updateVisionItemStatus(id, 'achieved'); // Mark as achieved instead of deleting
   };
 
   const getCategoryInfo = (categoryName: string) => {
     return categories.find(cat => cat.name === categoryName) || { color: 'bg-gray-500', emoji: '📌' };
+  };
+
+  const handleShowForm = () => {
+    setShowForm(true);
+    if (isTracking) {
+      endSession({ action: 'start_creating_vision' });
+      startSession({ action: 'create_vision_item' });
+    }
+  };
+
+  const handleCancelForm = () => {
+    setShowForm(false);
+    if (isTracking) {
+      endSession({ action: 'cancelled_vision_creation' });
+      startSession({ action: 'return_to_board' });
+    }
   };
 
   if (!showForm && visionItems.length === 0) {
@@ -61,7 +114,7 @@ const VisionBoardCreator = () => {
             A vision board helps you clarify, concentrate, and maintain focus on your life goals.
           </p>
           <Button 
-            onClick={() => setShowForm(true)}
+            onClick={handleShowForm}
             className="bg-gradient-to-r from-purple-600 to-blue-600"
           >
             <Plus className="w-4 h-4 mr-2" />
@@ -136,7 +189,7 @@ const VisionBoardCreator = () => {
             <Button onClick={addVisionItem} className="bg-gradient-to-r from-purple-600 to-blue-600">
               Add to Vision Board
             </Button>
-            <Button onClick={() => setShowForm(false)} variant="outline">
+            <Button onClick={handleCancelForm} variant="outline">
               Cancel
             </Button>
           </div>
@@ -144,6 +197,8 @@ const VisionBoardCreator = () => {
       </Card>
     );
   }
+
+  const activeItems = visionItems.filter(item => item.status === 'active');
 
   return (
     <div className="w-full max-w-6xl mx-auto space-y-6">
@@ -155,7 +210,7 @@ const VisionBoardCreator = () => {
           <p className="text-gray-600 mt-2">Visualize your dreams and make them reality</p>
         </div>
         <Button 
-          onClick={() => setShowForm(true)}
+          onClick={handleShowForm}
           className="bg-gradient-to-r from-purple-600 to-blue-600"
         >
           <Plus className="w-4 h-4 mr-2" />
@@ -164,7 +219,7 @@ const VisionBoardCreator = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {visionItems.map((item) => {
+        {activeItems.map((item) => {
           const categoryInfo = getCategoryInfo(item.category);
           return (
             <Card 
@@ -209,7 +264,7 @@ const VisionBoardCreator = () => {
         })}
       </div>
 
-      {visionItems.length > 0 && (
+      {activeItems.length > 0 && (
         <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
           <CardContent className="p-6 text-center">
             <h3 className="text-lg font-semibold mb-2">✨ Daily Affirmation</h3>

@@ -1,17 +1,34 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Star } from 'lucide-react';
 import { useUserValues } from '@/hooks/useUserValues';
+import { useToolSession } from '@/hooks/useToolSession';
 
 const ValuesAssessment = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [responses, setResponses] = useState<number[]>([]);
   const [showResults, setShowResults] = useState(false);
   const { values, saveValues } = useUserValues();
+  const { startSession, endSession, isTracking } = useToolSession('Values Assessment');
+
+  // Start session when component mounts
+  useEffect(() => {
+    startSession({ action: 'start_assessment', existing_values: values.length });
+    
+    return () => {
+      if (isTracking) {
+        endSession({ 
+          action: 'exit_assessment', 
+          questions_answered: responses.length,
+          completed: showResults 
+        });
+      }
+    };
+  }, []);
 
   const valuesOptions = [
     { name: 'Family', description: 'Close relationships with loved ones' },
@@ -45,6 +62,16 @@ const ValuesAssessment = () => {
       
       await saveValues(valuesData);
       setShowResults(true);
+      
+      // Track completion
+      if (isTracking) {
+        endSession({ 
+          action: 'assessment_completed',
+          total_questions: questions.length,
+          top_values: valuesData.sort((a, b) => b.rating - a.rating).slice(0, 3)
+        });
+        startSession({ action: 'view_results' });
+      }
     }
   };
 
@@ -59,6 +86,11 @@ const ValuesAssessment = () => {
     setCurrentQuestion(0);
     setResponses([]);
     setShowResults(false);
+    
+    if (isTracking) {
+      endSession({ action: 'restart_assessment' });
+      startSession({ action: 'retake_assessment' });
+    }
   };
 
   // Check if user has recent assessment
