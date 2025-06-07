@@ -10,6 +10,7 @@ import VisionBoardWidget from '../components/dashboard/VisionBoardWidget';
 import EngagementInsightsWidget from '../components/dashboard/EngagementInsightsWidget';
 import ProgressInsightsWidget from '../components/dashboard/ProgressInsightsWidget';
 import RecommendationsWidget from '../components/dashboard/RecommendationsWidget';
+import CalendarWidget from '../components/dashboard/CalendarWidget';
 import { Target, BookOpen, Users, Clock } from 'lucide-react';
 
 const Dashboard = () => {
@@ -108,6 +109,7 @@ const Dashboard = () => {
 
             {/* Right Column */}
             <div className="space-y-8">
+              <CalendarWidget />
               <EngagementInsightsWidget />
               <ProgressInsightsWidget />
               <VisionBoardWidget />
