@@ -18,9 +18,12 @@ const Dashboard = () => {
   if (loading) {
     return (
       <Layout>
-        <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-white pt-20 pb-16 px-4">
-          <div className="max-w-7xl mx-auto flex items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 pt-6 pb-16 px-4">
+          <div className="max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
+            <div className="relative">
+              <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+              <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-blue-400 rounded-full animate-spin animate-reverse opacity-30"></div>
+            </div>
           </div>
         </div>
       </Layout>
@@ -30,10 +33,16 @@ const Dashboard = () => {
   if (!user) {
     return (
       <Layout>
-        <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-white pt-20 pb-16 px-4">
-          <div className="max-w-7xl mx-auto text-center">
-            <h1 className="text-3xl font-bold text-gray-800 mb-4">Welcome to Life with Purpose</h1>
-            <p className="text-xl text-gray-600 mb-8">Please sign in to access your dashboard</p>
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 pt-20 pb-16 px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-12 shadow-xl border border-white/20">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-6">
+                Welcome to Life with Purpose
+              </h1>
+              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                Please sign in to access your personalized dashboard and begin your journey
+              </p>
+            </div>
           </div>
         </div>
       </Layout>
@@ -42,16 +51,18 @@ const Dashboard = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-white pt-20 pb-16 px-4">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 pt-6 pb-16 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">
-              Welcome back! 👋
-            </h1>
-            <p className="text-gray-600">
-              Here's your personal development journey overview
-            </p>
+            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-3">
+                Welcome back! 👋
+              </h1>
+              <p className="text-gray-600 text-lg">
+                Here's your personal development journey overview
+              </p>
+            </div>
           </div>
 
           {/* Quick Stats */}

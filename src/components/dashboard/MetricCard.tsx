@@ -2,12 +2,13 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, TrendingUp, TrendingDown } from 'lucide-react';
+import { ArrowRight, TrendingUp, TrendingDown, LucideIcon } from 'lucide-react';
 
 interface MetricCardProps {
   title: string;
   value: string | number;
-  progress: number;
+  icon?: LucideIcon;
+  trend?: string;
   change?: {
     value: string;
     trend: 'up' | 'down';
@@ -17,86 +18,66 @@ interface MetricCardProps {
   viewAllLink?: string;
 }
 
-const MetricCard = ({ title, value, progress, change, color, viewAllLink }: MetricCardProps) => {
+const MetricCard = ({ title, value, icon: Icon, trend, change, color, viewAllLink }: MetricCardProps) => {
   const colorClasses = {
     purple: {
       bg: 'bg-gradient-to-br from-purple-500 to-purple-600',
-      progress: 'stroke-purple-500',
-      progressBg: 'stroke-purple-200',
+      icon: 'text-purple-600',
+      iconBg: 'bg-purple-100',
       text: 'text-purple-600'
     },
     green: {
       bg: 'bg-gradient-to-br from-green-500 to-green-600',
-      progress: 'stroke-green-500',
-      progressBg: 'stroke-green-200',
+      icon: 'text-green-600',
+      iconBg: 'bg-green-100',
       text: 'text-green-600'
     },
     blue: {
       bg: 'bg-gradient-to-br from-blue-500 to-blue-600',
-      progress: 'stroke-blue-500',
-      progressBg: 'stroke-blue-200',
+      icon: 'text-blue-600',
+      iconBg: 'bg-blue-100',
       text: 'text-blue-600'
     },
     orange: {
       bg: 'bg-gradient-to-br from-orange-500 to-orange-600',
-      progress: 'stroke-orange-500',
-      progressBg: 'stroke-orange-200',
+      icon: 'text-orange-600',
+      iconBg: 'bg-orange-100',
       text: 'text-orange-600'
     }
   };
 
   const classes = colorClasses[color];
-  const circumference = 2 * Math.PI * 40;
-  const strokeDasharray = circumference;
-  const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   return (
-    <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+    <Card className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 bg-white/80 backdrop-blur-sm">
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
-          <div className="relative w-16 h-16">
-            <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 100 100">
-              <circle
-                cx="50"
-                cy="50"
-                r="40"
-                stroke="currentColor"
-                strokeWidth="8"
-                fill="none"
-                className={classes.progressBg}
-              />
-              <circle
-                cx="50"
-                cy="50"
-                r="40"
-                stroke="currentColor"
-                strokeWidth="8"
-                fill="none"
-                strokeLinecap="round"
-                strokeDasharray={strokeDasharray}
-                strokeDashoffset={strokeDashoffset}
-                className={classes.progress}
-                style={{
-                  transition: 'stroke-dashoffset 0.5s ease-in-out',
-                }}
-              />
-            </svg>
-          </div>
+          {Icon && (
+            <div className={`w-12 h-12 ${classes.iconBg} rounded-xl flex items-center justify-center shadow-sm`}>
+              <Icon className={`w-6 h-6 ${classes.icon}`} />
+            </div>
+          )}
           <div className="text-right">
-            <div className="text-3xl font-bold text-gray-800">{value}</div>
-            <div className="text-sm text-gray-500">{title}</div>
+            <div className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">{value}</div>
+            <div className="text-sm font-medium text-gray-500">{title}</div>
           </div>
         </div>
+
+        {trend && (
+          <div className="mb-4">
+            <span className="text-sm font-medium text-gray-600">{trend}</span>
+          </div>
+        )}
 
         {change && (
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-1">
               {change.trend === 'up' ? (
-                <TrendingUp className="w-4 h-4 text-green-500" />
+                <TrendingUp className="w-4 h-4 text-emerald-500" />
               ) : (
                 <TrendingDown className="w-4 h-4 text-red-500" />
               )}
-              <span className={`text-sm font-medium ${change.trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+              <span className={`text-sm font-medium ${change.trend === 'up' ? 'text-emerald-600' : 'text-red-600'}`}>
                 {change.value}
               </span>
             </div>
